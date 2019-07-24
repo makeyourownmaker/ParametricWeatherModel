@@ -1,6 +1,10 @@
 
+from __future__ import (division, print_function, absolute_import,
+                        unicode_literals)
+
 import math
 import argparse
+
 
 class Range(object):
     def __init__(self, start, end):
@@ -57,7 +61,7 @@ def downwelling_rad(args):
 
     Q_Ld = 0
 
-    print "Q_Ld:\t", Q_Ld
+    print("Q_Ld:\t", Q_Ld)
 
     return Q_Ld
 
@@ -69,7 +73,7 @@ def upwelling_rad(args):
 
     Q_Lu = 0
 
-    print "Q_Lu:\t", Q_Lu
+    print("Q_Lu:\t", Q_Lu)
 
     return Q_Lu
 
@@ -81,7 +85,7 @@ def sensible_heat_flux(args):
 
     Q_H = 0
 
-    print "Q_H:\t", Q_H
+    print("Q_H:\t", Q_H)
 
     return Q_H
 
@@ -93,7 +97,7 @@ def latent_heat_flux(args):
 
     Q_E = 0
 
-    print "Q_E:\t", Q_E
+    print( "Q_E:\t", Q_E)
 
     return Q_E
 
@@ -104,7 +108,7 @@ def local_hour(h_utc, lon):
     '''
 
     h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
-    print "h:\t", h
+    print("h:\t", h)
 
     return h
 
@@ -121,7 +125,7 @@ def declination(args):
     doy = args.day_of_year
 
     delta = 23.45 * math.cos(2 * math.pi * (doy - d_s) / d_y)
-    print "delta:\t", delta
+    print("delta:\t", delta)
 
     return delta
 
@@ -137,8 +141,9 @@ def zenith(args):
     h     = local_hour(h_utc, lon)
     dec   = declination(args)
 
-    zenith = math.sin(lat) * math.sin(dec) + math.cos(lat) * math.cos(dec) * math.cos(h)
-    print "zenith:\t", zenith
+    zenith = math.sin(lat) * math.sin(dec) + \
+             math.cos(lat) * math.cos(dec) * math.cos(h)
+    print("zenith:\t", zenith)
 
     return zenith
 
@@ -174,7 +179,7 @@ def solar_rad(args):
         # NOTE: Ignoring elliptical orbit for now
         Q_S  = S * 1.5**2 * (1 - a) * zen * tau_s
 
-    print "Q_S:\t", Q_S
+    print("Q_S:\t", Q_S)
 
     return Q_S
 
@@ -202,8 +207,8 @@ def main(args):
 
     T_g = k_to_f(T_g_init + d_T_g)
 
-    print "d_T_g:\t", d_T_g, "K"
-    print "T_g:\t", T_g, "F"
+    print("d_T_g:\t", d_T_g, "K")
+    print("T_g:\t", T_g, "F")
 
     return 0
 
@@ -227,7 +232,7 @@ if __name__ == '__main__':
             help='Specify latitude (-90 to 90; plus for north, minus for south)', 
             required=True, type=float, choices=[Range(-90.0, 90.0)])
     required.add_argument('-lo', '--longitude',    
-            help='Specify longitude (-180 to 180; plus for east, minus for west)', 
+            help='Specify longitude (-180 to 180; plus for east, minus for west)',
             required=True, type=float, choices=[Range(-180.0, 180.0)])
     required.add_argument('-da', '--day_of_year',  
             help='Specify Julian day of year (1 to 365)', 
@@ -256,9 +261,8 @@ if __name__ == '__main__':
             help='Specify UTC offset (-12 to 12) default=0', 
             default=0, type=int, choices=range(-12, 13))
     optional.add_argument('-fp', '--forecast_period', 
-            help='Specify forecast period in seconds (600 to 3600) default=3600', 
+            help='Specify forecast period in seconds (600 to 3600) default=3600',
             default=3600, type=int, choices=[Range(600, 3601)])
-            #default=3600, type=int, choices=range(600, 3601))
     optional.add_argument('-tr', '--transmissivity',  
             help='Specify atmospheric transmissivity default=0.8', 
             default=0.8, type=float)

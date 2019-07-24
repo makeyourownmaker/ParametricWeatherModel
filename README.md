@@ -19,7 +19,7 @@ ground temperature and initial surface temperature:
 ```
 python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72
 
-# Similarly with longer options
+# Similarly with long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72
 
 # To list command line options
@@ -29,7 +29,7 @@ python parametric_scheme.py -h
 
 ## Installation
 
-Requires a recent version of python.
+Requires a recent version of python (either 2 or 3 should work).
 
 The following should work on any unix-ish environment:
 ```
