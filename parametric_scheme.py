@@ -2,6 +2,13 @@
 import math
 import argparse
 
+class Range(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+    def __eq__(self, other):
+        return self.start <= other <= self.end
+
 
 def f_to_k(f):
     '''
@@ -216,20 +223,45 @@ if __name__ == '__main__':
             'Calculate surface temperature at latitude and longitude')
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
-    required.add_argument('-la', '--latitude',     help='Specify latitude', required=True, type=float)
-    required.add_argument('-lo', '--longitude',    help='Specify longitude (plus for east, minus for west)', required=True, type=float)
-    required.add_argument('-da', '--day_of_year',  help='Specify Julian day of year (1 to 365)', required=True, type=int)
-    required.add_argument('-gt', '--ground_temp',  help='Specify ground reservoir temperature (Fahrenheit only)', type=float)
-    required.add_argument('-st', '--surface_temp', help='Specify initial surface air temperature (Fahrenheit only)', type=float)
+    required.add_argument('-la', '--latitude',     
+            help='Specify latitude (-90 to 90; plus for north, minus for south)', 
+            required=True, type=float, choices=[Range(-90.0, 90.0)])
+    required.add_argument('-lo', '--longitude',    
+            help='Specify longitude (-180 to 180; plus for east, minus for west)', 
+            required=True, type=float, choices=[Range(-180.0, 180.0)])
+    required.add_argument('-da', '--day_of_year',  
+            help='Specify Julian day of year (1 to 365)', 
+            required=True, type=int, choices=[Range(1, 366)])
+    required.add_argument('-gt', '--ground_temp',  
+            help='Specify ground reservoir temperature (Fahrenheit only)', 
+            type=float)
+    required.add_argument('-st', '--surface_temp', 
+            help='Specify initial surface air temperature (Fahrenheit only)', 
+            type=float)
     
-    #optional.add_argument('-v',  '--verbose',         help='Print additional information')
-    optional.add_argument('-ho', '--hour',            help='Specify hour of day (0 to 24) default=12', default=12, type=int)
-    optional.add_argument('-al', '--albedo',          help='Specify albedo (0 to 1) default=0.3', default=0.3, type=float)
-    optional.add_argument('-cf', '--cloud_fraction',  help='Specify cloud fraction (0 to 1) default=0', default=0, type=float)
-    optional.add_argument('-ds', '--day_of_solstice', help='Specify day of solstice (172 or 173) default=173', default=173, type=int)
-    optional.add_argument('-uo', '--utc_offset',      help='Specify UTC offset (-12 to 12) default=0', default=0, type=int)
-    optional.add_argument('-fp', '--forecast_period', help='Specify forecast period in seconds default=3600', default=3600, type=int)
-    optional.add_argument('-tr', '--transmissivity',  help='Specify atmospheric transmissivity default=0.8', default=0.8, type=float)
+    #optional.add_argument('-v', '--verbose', help='Print additional information')
+    optional.add_argument('-ho', '--hour',            
+            help='Specify hour of day (0 to 24) default=12', 
+            default=12, type=int, choices=range(0, 25))
+    optional.add_argument('-al', '--albedo',          
+            help='Specify albedo (0 to 1) default=0.3', 
+            default=0.3, type=float, choices=[Range(0.0, 1.0)])
+    optional.add_argument('-cf', '--cloud_fraction',  
+            help='Specify cloud fraction (0 to 1) default=0', 
+            default=0, type=float, choices=[Range(0.0, 1.0)])
+    optional.add_argument('-ds', '--day_of_solstice', 
+            help='Specify day of solstice (172 or 173) default=173', 
+            default=173, type=int, choices=range(172, 174))
+    optional.add_argument('-uo', '--utc_offset',      
+            help='Specify UTC offset (-12 to 12) default=0', 
+            default=0, type=int, choices=range(-12, 13))
+    optional.add_argument('-fp', '--forecast_period', 
+            help='Specify forecast period in seconds (600 to 3600) default=3600', 
+            default=3600, type=int, choices=[Range(600, 3601)])
+            #default=3600, type=int, choices=range(600, 3601))
+    optional.add_argument('-tr', '--transmissivity',  
+            help='Specify atmospheric transmissivity default=0.8', 
+            default=0.8, type=float)
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
