@@ -2,7 +2,7 @@
 # ParametricWeatherModel
 
 ![Lifecycle
-](https://img.shields.io/badge/experimental-orange.svg?style=flat)
+](https://img.shields.io/badge/lifecycle-experimental-orange.svg?style=flat)
 ![Dependencies
 ](https://img.shields.io/badge/dependencies-none-brightgreen.svg?style=flat)
 
@@ -12,7 +12,7 @@ based primarily on latitude, longitude, day of year and hour of day.
 
 ## Development Stage
 
-The repository is under active but early development and contains many 
+The repository is under active but early development and contains some 
 limitations, hardcoded parameters and probably errors.  Please file an 
 issue if you find a problem.
 
