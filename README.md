@@ -1,6 +1,11 @@
 
 # ParametricWeatherModel
 
+![Lifecycle
+](https://img.shields.io/badge/experimental-orange.svg?style=flat)
+![Dependencies
+](https://img.shields.io/badge/dependencies-none-brightgreen.svg?style=flat)
+
 ParametricWeatherModel is a repository for forecasting surface temperature 
 based primarily on latitude, longitude, day of year and hour of day.
 
