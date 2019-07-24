@@ -63,13 +63,13 @@ Radiative processes to add:
   * ground heat flux (heat transfer from the ground surface into the deeper soil levels)
 
 Included parameters:
-  Required:
+  * Required:
     * Latitude
     * Longitude (plus for east, minus for west)
     * Day of year (1 to 365)
     * Initial surface air temperature (Fahrenheit)
     * Ground reservoir temperature (Fahrenheit)
-  Optional:
+  * Optional:
     * Hour of day (0 to 24) default=12
     * Cloud fraction (0 to 1) default=0
     * Albedo (0 to 1) default=0.3
@@ -80,10 +80,10 @@ Included parameters:
     * Help option
     
 Parameters to add:
-  Required:
+  * Required:
     * Initial surface air temperature (Celsius)
     * Ground reservoir temperature (Celsius)
-  Optional:
+  * Optional:
     * Precipitable water
     * Bowen ratio
     * Atmospheric emissivity 
