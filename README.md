@@ -107,7 +107,7 @@ Parameters to add:
   * latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
   * ground heat flux (heat transfer from the ground surface into the deeper soil levels)
 * Add more command line options
-  * Albedo, transmissivity, emissivity ...
+  * Precipitable water, Bowen ratio, Atmospheric emissivity ...
 * Improve documentation
   * Expand the details section above
     * Explain default values used and/or
