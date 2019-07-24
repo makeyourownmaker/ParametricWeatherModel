@@ -8,8 +8,8 @@ based primarily on latitude, longitude, day of year and hour of day.
 ## Development Stage
 
 The repository is under active but early development and contains many 
-limitations, hardcoded parameters and probably errors.  If it breaks you can 
-keep the pieces.
+limitations, hardcoded parameters and probably errors.  Please file an 
+issue if you find a problem.
 
 
 ## Usage
