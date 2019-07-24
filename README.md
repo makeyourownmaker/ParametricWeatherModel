@@ -61,7 +61,6 @@ The python code models the following radiative processes:
   * incoming solar radiation
 
 Radiative processes to add:
-  * upwelling longwave radiation from the surface
   * downwelling longwave radiation from the atmosphere
   * sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
   * latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
@@ -69,8 +68,8 @@ Radiative processes to add:
 
 Included parameters:
   * Required:
-    * Latitude
-    * Longitude (plus for east, minus for west)
+    * Latitude (-90 to 90; plus for north, minus for south)
+    * Longitude (-180 to 180; plus for east, minus for west)
     * Day of year (1 to 365)
     * Initial surface air temperature (Fahrenheit)
     * Ground reservoir temperature (Fahrenheit)
@@ -80,8 +79,9 @@ Included parameters:
     * Albedo (0 to 1) default=0.3
     * UTC offset (-12 to 12) default=0
     * Atmospheric transmissivity default=0.8
-    * Day of solstice default=173
-    * Forecase period in seconds default=3600
+    * Day of solstice (172 or 173) default=173
+    * Forecast period in seconds (600 to 3600) default=3600
+    * Surface emissivity (0.9 to 0.99) default=0.95
     * Help option
     
 Parameters to add:
@@ -91,7 +91,6 @@ Parameters to add:
   * Optional:
     * Precipitable water
     * Bowen ratio
-    * Atmospheric emissivity 
     * Verbose option
 
 
@@ -106,13 +105,12 @@ Parameters to add:
 
 * Validate solar radiation calculations
 * Add additional heat flux terms
-  * upwelling longwave radiation from the surface
   * downwelling longwave radiation from the atmosphere
   * sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
   * latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
   * ground heat flux (heat transfer from the ground surface into the deeper soil levels)
 * Add more command line options
-  * Precipitable water, Bowen ratio, Atmospheric emissivity ...
+  * Precipitable water, Bowen ratio etc
 * Improve documentation
   * Expand the details section above
     * Explain default values used and/or

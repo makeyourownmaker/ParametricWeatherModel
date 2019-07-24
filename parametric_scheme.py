@@ -72,7 +72,12 @@ def upwelling_rad(args):
     Calculate upwelling longwave radiation
     '''
 
-    Q_Lu = 0
+    # Constants
+    sigma = 5.67 * 10**(-8)  # W m^-2 K^-4 - Stefan-Boltzmann constant
+    e_g   = args.emissivity  # Surface emissivity
+
+    T_g  = args.ground_temp
+    Q_Lu = e_g * sigma * T_g**4
 
     print("Q_Lu:\t", Q_Lu)
 
@@ -269,6 +274,9 @@ if __name__ == '__main__':
     optional.add_argument('-tr', '--transmissivity',
             help='Specify atmospheric transmissivity default=0.8',
             default=0.8, type=float)
+    optional.add_argument('-em', '--emissivity',
+            help='Specify surface emissivity (0.9 to 0.99) default=0.95',
+            default=0.95, type=float, choices=[Range(0.9, 0.99)])
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
