@@ -84,6 +84,7 @@ Included parameters:
     * Surface emissivity (0.9 to 0.99) default=0.95
     * Atmospheric transmissivity default=0.8
     * Precipitable water default=2.5
+    * Verbose option
     * Help option
     
 Parameters to add:
@@ -92,7 +93,6 @@ Parameters to add:
     * Ground reservoir temperature (Celsius)
   * Optional:
     * Bowen ratio
-    * Verbose option
 
 
 ### Limitations
