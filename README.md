@@ -12,7 +12,7 @@ based primarily on latitude, longitude, day of year and hour of day.
 
 ## Development Stage
 
-The repository is under active but early development and contains some 
+The repository is under active, but early, development.  It contains some 
 limitations, hardcoded parameters and probably errors.  Please file an 
 issue if you find a problem.
 
@@ -58,13 +58,14 @@ small-scale or complex to be physically represented in the model by a
 simplified process."
 
 The python code models the following radiative processes:
-  * incoming solar radiation
+  * Incoming solar radiation
+  * Upwelling longwave radiation from the surface
+  * Downwelling longwave radiation from the atmosphere
+  * Ground heat flux (heat transfer from the ground surface into the deeper soil levels)
 
 Radiative processes to add:
-  * downwelling longwave radiation from the atmosphere
-  * sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
-  * latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
-  * ground heat flux (heat transfer from the ground surface into the deeper soil levels)
+  * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
+  * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
 
 Included parameters:
   * Required:
@@ -78,10 +79,11 @@ Included parameters:
     * Cloud fraction (0 to 1) default=0
     * Albedo (0 to 1) default=0.3
     * UTC offset (-12 to 12) default=0
-    * Atmospheric transmissivity default=0.8
     * Day of solstice (172 or 173) default=173
     * Forecast period in seconds (600 to 3600) default=3600
     * Surface emissivity (0.9 to 0.99) default=0.95
+    * Atmospheric transmissivity default=0.8
+    * Precipitable water default=2.5
     * Help option
     
 Parameters to add:
@@ -89,7 +91,6 @@ Parameters to add:
     * Initial surface air temperature (Celsius)
     * Ground reservoir temperature (Celsius)
   * Optional:
-    * Precipitable water
     * Bowen ratio
     * Verbose option
 
@@ -98,26 +99,27 @@ Parameters to add:
 
   * Earth's elliptical orbit is ignored
   * Some variables are treated as constants e.g. transmissivity
-  * Hardcoded parameters include: thermal diffusivity of air, soil heat capacity and solar radiation
+  * Hardcoded parameters include: thermal diffusivity of air, soil heat 
+    capacity and solar radiation
+  * Assumes temperature at 40 hPa above the ground surface equal surface 
+    temperature which it certainly does not
 
 
 ## Roadmap
 
 * Validate solar radiation calculations
 * Add additional heat flux terms
-  * downwelling longwave radiation from the atmosphere
-  * sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
-  * latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
-  * ground heat flux (heat transfer from the ground surface into the deeper soil levels)
+  * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
+  * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
 * Add more command line options
-  * Precipitable water, Bowen ratio etc
+  * Bowen ratio etc
 * Improve documentation
   * Expand the details section above
     * Explain default values used and/or
     * Include details of the constants used
-  * Possibly add some illustrative plots
   * Add more usage examples
     * Illustrate the most important command line options
+  * Possibly add some illustrative plots
 * Add unit tests
 
 
