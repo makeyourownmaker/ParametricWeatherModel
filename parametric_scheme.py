@@ -84,7 +84,7 @@ def downwelling_rad(args):
     # Q_Ld = e_g * e_a * sigma * T_a**4
     Q_Ld = e_g * e_a * sigma * T_a**4 + b * e_g * (1 - e_a) * sigma * T_c**4
 
-    print("Q_Ld:\t", Q_Ld)
+    print_v("Q_Ld:\t", Q_Ld)
 
     return Q_Ld
 
@@ -102,7 +102,7 @@ def upwelling_rad(args):
 
     Q_Lu = e_g * sigma * T_g**4
 
-    print("Q_Lu:\t", Q_Lu)
+    print_v("Q_Lu:\t", Q_Lu)
 
     return Q_Lu
 
@@ -114,7 +114,7 @@ def sensible_heat_flux(args):
 
     Q_H = 0
 
-    print("Q_H:\t", Q_H)
+    print_v("Q_H:\t", Q_H)
 
     return Q_H
 
@@ -126,7 +126,7 @@ def latent_heat_flux(args):
 
     Q_E = 0
 
-    print("Q_E:\t", Q_E)
+    print_v("Q_E:\t", Q_E)
 
     return Q_E
 
@@ -140,7 +140,7 @@ def local_hour(args):
     h_utc = hour_to_utc(args)
 
     h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
-    print("h:\t", h)
+    print_v("h:\t", h)
 
     return h
 
@@ -157,7 +157,7 @@ def declination(args):
     doy = args.day_of_year
 
     delta = 23.45 * math.cos(2 * math.pi * (doy - d_s) / d_y)
-    print("delta:\t", delta)
+    print_v("delta:\t", delta)
 
     return delta
 
@@ -173,7 +173,7 @@ def zenith(args):
 
     zenith = math.sin(lat) * math.sin(dec) + math.cos(lat) * math.cos(dec) * math.cos(h)
 
-    print("zenith:\t", zenith)
+    print_v("zenith:\t", zenith)
 
     return zenith
 
@@ -185,7 +185,7 @@ def hour_to_utc(args):
 
     utc_time = datetime.datetime.strptime(str(args.hour), "%H") + datetime.timedelta(hours=args.utc_offset)
     utc_hour = utc_time.hour
-    print("h_utc:\t", utc_hour)
+    print_v("h_utc:\t", utc_hour)
 
     return utc_hour
 
@@ -212,7 +212,7 @@ def solar_rad(args):
         # NOTE: Ignoring elliptical orbit for now
         Q_S = S * eor**2 * (1 - a) * zen * tau_s
 
-    print("Q_S:\t", Q_S)
+    print_v("Q_S:\t", Q_S)
 
     return Q_S
 
@@ -240,7 +240,7 @@ def main(args):
 
     T_g = k_to_f(T_g_init + d_T_g)
 
-    print("d_T_g:\t", d_T_g, "K")
+    print_v("d_T_g:\t", d_T_g, "K")
     print("T_g:\t", T_g, "F")
 
     return 0
@@ -275,7 +275,9 @@ if __name__ == '__main__':
             help='Specify initial surface air temperature (Fahrenheit only)',
             type=float)
 
-    # optional.add_argument('-v', '--verbose', help='Print additional information')
+    optional.add_argument('-v',  '--verbose',
+            help='Print additional information',
+            default=True, action="store_false")
     optional.add_argument('-ho', '--hour',
             help='Specify hour of day (0 to 24) default=12',
             default=12, type=int, choices=range(0, 25))
@@ -306,5 +308,7 @@ if __name__ == '__main__':
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
+
+    print_v = print if args.verbose else lambda *a, **k: None
 
     main(args)
