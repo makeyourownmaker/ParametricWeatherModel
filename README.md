@@ -101,7 +101,9 @@ Parameters to add:
   * Some variables are treated as constants e.g. transmissivity
   * Hardcoded parameters include: thermal diffusivity of air, soil heat 
     capacity and solar radiation
-  * Assumes temperature at 40 hPa above the ground surface equal surface 
+  * Assumes temperature at 40 hPa above the ground surface equals surface 
+    temperature which it certainly does not
+  * Assumes temperature at the base of the cloud equals surface 
     temperature which it certainly does not
 
 
