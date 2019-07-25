@@ -4,12 +4,13 @@ from __future__ import (division, print_function, absolute_import,
 
 import math
 import argparse
+import datetime
 
 
 class Range(object):
     def __init__(self, start, end):
         self.start = start
-        self.end = end
+        self.end   = end
 
     def __eq__(self, other):
         return self.start <= other <= self.end
@@ -55,12 +56,33 @@ def k_to_c(k):
     return c
 
 
+def atmospheric_emissivity(args):
+
+    w_p = args.precip_water
+    e_a = 0.725 + 0.17 * math.log10(w_p)
+
+    return e_a
+
+
 def downwelling_rad(args):
     '''
     Calculate downwelling longwave radiation
     '''
 
-    Q_Ld = 0
+    # Constants
+    sigma = 5.67 * 10**(-8)  # W m^-2 K^-4 - Stefan-Boltzmann constant
+
+    b   = args.cloud_fraction  # Cloud fraction
+    e_g = args.emissivity      # Surface emissivity
+    T_a = args.surface_temp    # Temperature at 40 hPa above the ground surface
+    T_c = args.surface_temp    # Temperature at 40 hPa above the ground surface
+    # NOTE Assuming T_a equals surface_temp which it very definitely does not
+    # NOTE Assuming T_c equals surface_temp which it very definitely does not
+
+    e_a = atmospheric_emissivity(args)
+
+    # Q_Ld = e_g * e_a * sigma * T_a**4
+    Q_Ld = e_g * e_a * sigma * T_a**4 + b * e_g * (1 - e_a) * sigma * T_c**4
 
     print("Q_Ld:\t", Q_Ld)
 
@@ -74,9 +96,10 @@ def upwelling_rad(args):
 
     # Constants
     sigma = 5.67 * 10**(-8)  # W m^-2 K^-4 - Stefan-Boltzmann constant
-    e_g   = args.emissivity  # Surface emissivity
 
-    T_g  = args.ground_temp
+    e_g = args.emissivity  # Surface emissivity
+    T_g = args.ground_temp
+
     Q_Lu = e_g * sigma * T_g**4
 
     print("Q_Lu:\t", Q_Lu)
@@ -108,10 +131,13 @@ def latent_heat_flux(args):
     return Q_E
 
 
-def local_hour(h_utc, lon):
+def local_hour(args):
     '''
     Calculate local hour of the sun
     '''
+
+    lon   = args.longitude
+    h_utc = hour_to_utc(args)
 
     h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
     print("h:\t", h)
@@ -141,39 +167,38 @@ def zenith(args):
     Calculate zenith angle
     '''
 
-    lat   = args.latitude
-    lon   = args.longitude
-    h_utc = t_to_utc(args)
-    h     = local_hour(h_utc, lon)
-    dec   = declination(args)
+    lat = args.latitude
+    h   = local_hour(args)
+    dec = declination(args)
 
-    zenith = math.sin(lat) * math.sin(dec) + \
-             math.cos(lat) * math.cos(dec) * math.cos(h)
+    zenith = math.sin(lat) * math.sin(dec) + math.cos(lat) * math.cos(dec) * math.cos(h)
 
     print("zenith:\t", zenith)
 
     return zenith
 
 
-def t_to_utc(args):
+def hour_to_utc(args):
     '''
     Convert hour to UTC
     '''
 
-    utc = args.hour + args.utc_offset
+    utc_time = datetime.datetime.strptime(str(args.hour), "%H") + datetime.timedelta(hours=args.utc_offset)
+    utc_hour = utc_time.hour
+    print("h_utc:\t", utc_hour)
 
-    return utc
+    return utc_hour
 
 
 def solar_rad(args):
     '''
-    Calculate incoming solar radiation at latitude and longitude
+    Calculate incoming solar radiation at latitude, longitude, day and hour
     '''
 
     # "Constants"
     S = 1368                 # W m^-2 - Solar irradiance
     # d_bar = 1.50 * 10**11  # m      - Mean distance from sun to Earth
-    eor = 1.5  # Elliptical orbit ratio NOTE Ignoring elliptical orbit for now
+    eor = 1  # Elliptical orbit ratio NOTE Ignoring elliptical orbit for now
 
     tau_s = args.transmissivity  # Atmospheric transmissivity
     a     = args.albedo
@@ -226,9 +251,7 @@ def main(args):
 #     * Initial surface air temperature (Celsius)
 #     * Ground reservoir temperature (Celsius)
 #   Optional:
-#     * Precipitable water
 #     * Bowen ratio
-#     * Atmospheric emissivity
 #     * Verbose option
 
 if __name__ == '__main__':
@@ -277,6 +300,9 @@ if __name__ == '__main__':
     optional.add_argument('-em', '--emissivity',
             help='Specify surface emissivity (0.9 to 0.99) default=0.95',
             default=0.95, type=float, choices=[Range(0.9, 0.99)])
+    optional.add_argument('-pw', '--precip_water',
+            help='Specify precipitable water default=2.5',
+            default=2.5, type=float)
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
