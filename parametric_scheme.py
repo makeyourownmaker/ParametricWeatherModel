@@ -74,8 +74,8 @@ def downwelling_rad(args):
 
     b   = args.cloud_fraction  # Cloud fraction
     e_g = args.emissivity      # Surface emissivity
-    T_a = args.surface_temp    # Temperature at 40 hPa above the ground surface
-    T_c = args.surface_temp    # Temperature at 40 hPa above the ground surface
+    T_a = f_to_k(args.surface_temp)    # Temperature at 40 hPa above the ground surface
+    T_c = f_to_k(args.surface_temp)    # Temperature at the base of the cloud
     # NOTE Assuming T_a equals surface_temp which it very definitely does not
     # NOTE Assuming T_c equals surface_temp which it very definitely does not
 
@@ -98,7 +98,7 @@ def upwelling_rad(args):
     sigma = 5.67 * 10**(-8)  # W m^-2 K^-4 - Stefan-Boltzmann constant
 
     e_g = args.emissivity  # Surface emissivity
-    T_g = args.ground_temp
+    T_g = f_to_k(args.ground_temp)
 
     Q_Lu = e_g * sigma * T_g**4
 
@@ -112,19 +112,28 @@ def sensible_heat_flux(args):
     Calculate sensible heat flux
     '''
 
-    Q_H = 0
+    # Constants
+    # pho = 1.225  # air density - Kg m^-3 (at 1013.25 hPa (abs) and 15 C)
+    # c_p = 1004   # specific heat at constant pressure - J K^-1 Kg^-1
+    # r_H = 1      # resistance to sensible heat flux - s m^-1
+    k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1
+
+    T_g = f_to_k(args.ground_temp)
+    T_s = f_to_k(args.surface_temp)
+    Q_H = - k_a * (T_g - T_s)  # Or T_s - T_g??
+    # Q_H = pho * c_p * (T_s - T_g) / r_H  # Or T_g - T_s??
 
     print_v("Q_H:\t", Q_H)
 
     return Q_H
 
 
-def latent_heat_flux(args):
+def latent_heat_flux(args, Q_H):
     '''
-    Calculate latent heat flux
+    Calculate latent heat flux using Bowen ratio
     '''
 
-    Q_E = 0
+    Q_E = Q_H * args.bowen_ratio
 
     print_v("Q_E:\t", Q_E)
 
@@ -203,8 +212,7 @@ def solar_rad(args):
     tau_s = args.transmissivity  # Atmospheric transmissivity
     a     = args.albedo
 
-    # zen = zenith(args)
-    zen = - zenith(args)
+    zen = zenith(args)
 
     if zen < 0:
         Q_S = 0
@@ -230,18 +238,18 @@ def main(args):
     Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
     Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
     Q_H  = sensible_heat_flux(args)       # Sensible heat flux
-    Q_E  = latent_heat_flux(args)         # Latent heat flux
-    T_r  = f_to_k(args.ground_temp)       # K - Reservoir temperature
-    T_g_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
+    Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
+    T_g  = f_to_k(args.ground_temp)       # K - Reservoir temperature
+    T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
 
     d_t   = args.forecast_period
-    d_T_g = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_g_init - T_r)) * d_t / c_g
+    d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_s_init - T_g)) * d_t / c_g
     # last term approximates Q_G the ground heat flux
 
-    T_g = k_to_f(T_g_init + d_T_g)
+    T_s = k_to_f(T_s_init + d_T_s)
 
-    print_v("d_T_g:\t", d_T_g, "K")
-    print("T_g:\t", T_g, "F")
+    print_v("d_T_s:\t", d_T_s, "K")
+    print("T_s:\t", T_s, "F")
 
     return 0
 
@@ -250,9 +258,6 @@ def main(args):
 #   Required:
 #     * Initial surface air temperature (Celsius)
 #     * Ground reservoir temperature (Celsius)
-#   Optional:
-#     * Bowen ratio
-#     * Verbose option
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -305,6 +310,9 @@ if __name__ == '__main__':
     optional.add_argument('-pw', '--precip_water',
             help='Specify precipitable water default=2.5',
             default=2.5, type=float)
+    optional.add_argument('-br', '--bowen_ratio',
+            help='Specify Bowen ratio default=0.9',
+            default=0.9, type=float)
 
     parser._action_groups.append(optional)
     args = parser.parse_args()

@@ -21,7 +21,7 @@ issue if you find a problem.
 
 Predict surface temperature at specified latitude, longitude, day of year, 
 ground temperature and initial surface temperature:
-```
+```sh
 python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72
 
 # Similarly with long options
@@ -37,7 +37,7 @@ python parametric_scheme.py -h
 Requires a recent version of python (either 2 or 3 should work).
 
 The following should work on any unix-ish environment:
-```
+```sh
 wget https://raw.githubusercontent.com/makeyourownmaker/ParametricWeatherModel/master/parametric_scheme.py
 python parametric_scheme.py -h
 ```
@@ -82,6 +82,7 @@ Included parameters:
     * Day of solstice (172 or 173) default=173
     * Forecast period in seconds (600 to 3600) default=3600
     * Surface emissivity (0.9 to 0.99) default=0.95
+    * Bowen ratio default=0.9
     * Atmospheric transmissivity default=0.8
     * Precipitable water default=2.5
     * Verbose option
@@ -91,8 +92,6 @@ Parameters to add:
   * Required:
     * Initial surface air temperature (Celsius)
     * Ground reservoir temperature (Celsius)
-  * Optional:
-    * Bowen ratio
 
 
 ### Limitations
@@ -113,8 +112,9 @@ Parameters to add:
 * Add additional heat flux terms
   * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
   * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
-* Add more command line options
-  * Bowen ratio etc
+* Improve command line options
+  * Celsius reservoir and surface temperatures
+  * Add more range checks: Bowen ratio, precipitable water etc
 * Improve documentation
   * Expand the details section above
     * Explain default values used and/or
@@ -136,6 +136,10 @@ Pull requests are welcome.  For major changes, please open an issue first to dis
   by [Luke Madaus](http://midlatitude.com/lukemadaus/)
 * [Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://www.cambridge.org/core/books/parameterization-schemes/C7C8EC8901957314433BE7C8BC36F16D#fndtn-information) 
   by [David J. Stensrud](http://www.met.psu.edu/people/djs78)
+* The [ESCOMP repositories](https://github.com/ESCOMP) particularly the Community Land Model included in [CTSM](https://github.com/ESCOMP/ctsm)
+  which has detailed [https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Radiative_Fluxes/CLM50_Tech_Note_Radiative_Fluxes.html](radiative flux) 
+  and [https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Fluxes/CLM50_Tech_Note_Fluxes.html#sensible-and-latent-heat-fluxes-for-non-vegetated-surfaces](heat flux) 
+  calculations
 
 
 ## License
