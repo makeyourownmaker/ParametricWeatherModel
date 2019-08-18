@@ -173,7 +173,7 @@ def declination(args):
 
 def zenith(args):
     '''
-    Calculate zenith angle
+    Calculate cosine of zenith angle
     '''
 
     lat = args.latitude
