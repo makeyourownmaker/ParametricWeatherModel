@@ -109,9 +109,6 @@ Parameters to add:
 ## Roadmap
 
 * Validate solar radiation calculations
-* Add additional heat flux terms
-  * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
-  * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
 * Improve command line options
   * Celsius reservoir and surface temperatures
   * Add more range checks: Bowen ratio, precipitable water etc
