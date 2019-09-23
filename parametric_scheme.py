@@ -145,13 +145,19 @@ def local_hour(args):
     Calculate local hour of the sun
     '''
 
-    lon   = args.longitude
-    h_utc = hour_to_utc(args)
+    # See following page for explanation of each equation
+    # https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time
+    LSTM = 15 * args.utc_offset
+    B    = math.radians(360 * (args.day_of_year - 81) / 365)
+    EOT  = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
 
-    h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
-    print_v("h:\t", h)
+    TC  = 4 * (args.longitude - LSTM) + EOT
+    LST = args.hour + TC / 60
+    HRA = 15 * (LST - 12)
+    print_v("EOT:\t", EOT)
+    print_v("HRA:\t", HRA)
 
-    return h
+    return HRA
 
 
 def declination(args):
@@ -176,10 +182,11 @@ def zenith(args):
     Calculate cosine of zenith angle
     '''
 
-    lat = args.latitude
-    h   = local_hour(args)
-    dec = declination(args)
+    h   = math.radians(local_hour(args))
+    lat = math.radians(args.latitude)
+    dec = math.radians(declination(args))
 
+    # Eqn 2.2  Pg 22
     zenith = math.sin(lat) * math.sin(dec) + math.cos(lat) * math.cos(dec) * math.cos(h)
 
     print_v("zenith:\t", zenith)

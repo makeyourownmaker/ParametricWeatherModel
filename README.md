@@ -108,7 +108,6 @@ Parameters to add:
 
 ## Roadmap
 
-* Validate solar radiation calculations
 * Improve command line options
   * Celsius reservoir and surface temperatures
   * Add more range checks: Bowen ratio, precipitable water etc
