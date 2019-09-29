@@ -124,12 +124,9 @@ Constants used:
 ## Roadmap
 
 * Improve command line options
-  * Ground reservoir and surface temperatures in Celsius
-  * Add more range checks: Bowen ratio, precipitable water etc
+  * Support ground reservoir and surface temperatures in Celsius
+  * Add more range checks: transmissivity and precipitable water
 * Improve documentation
-  * Expand the details section above
-    * Explain default values used and/or
-    * Include details of the constants used
   * Add more usage examples
     * Illustrate the most important command line options
   * Possibly add some illustrative plots
