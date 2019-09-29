@@ -57,7 +57,11 @@ def k_to_c(k):
 
 
 def atmospheric_emissivity(args):
+    '''
+    Calculate atmospheric emissivity
+    '''
 
+    # Equation 2.7  Page 26
     w_p = args.precip_water
     e_a = 0.725 + 0.17 * math.log10(w_p)
 
@@ -81,6 +85,7 @@ def downwelling_rad(args):
 
     e_a = atmospheric_emissivity(args)
 
+    # Equation 2.8  Page 27
     # Q_Ld = e_g * e_a * sigma * T_a**4
     Q_Ld = e_g * e_a * sigma * T_a**4 + b * e_g * (1 - e_a) * sigma * T_c**4
 
@@ -100,6 +105,7 @@ def upwelling_rad(args):
     e_g = args.emissivity  # Surface emissivity
     T_g = f_to_k(args.ground_temp)
 
+    # Equation 2.5  Page 25
     Q_Lu = e_g * sigma * T_g**4
 
     print_v("Q_Lu:\t", Q_Lu)
@@ -120,6 +126,8 @@ def sensible_heat_flux(args):
 
     T_g = f_to_k(args.ground_temp)
     T_s = f_to_k(args.surface_temp)
+
+    # Equation 2.18  Page 30
     Q_H = - k_a * (T_g - T_s)  # Or T_s - T_g??
     # Q_H = pho * c_p * (T_s - T_g) / r_H  # Or T_g - T_s??
 
@@ -133,6 +141,7 @@ def latent_heat_flux(args, Q_H):
     Calculate latent heat flux using Bowen ratio
     '''
 
+    # Based on the definition on Page 22
     Q_E = Q_H * args.bowen_ratio
 
     print_v("Q_E:\t", Q_E)
@@ -145,7 +154,7 @@ def local_hour(args):
     Calculate local hour of the sun
     '''
 
-    # See following page for explanation of each equation
+    # See following web page for explanation of each equation
     # https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time
     LSTM = 15 * args.utc_offset
     B    = math.radians(360 * (args.day_of_year - 81) / 365)
@@ -171,6 +180,7 @@ def declination(args):
     d_s = args.day_of_solstice
     doy = args.day_of_year
 
+    # Equation 2.3  Page 24
     delta = 23.45 * math.cos(2 * math.pi * (doy - d_s) / d_y)
     print_v("delta:\t", delta)
 
@@ -186,7 +196,7 @@ def zenith(args):
     lat = math.radians(args.latitude)
     dec = math.radians(declination(args))
 
-    # Eqn 2.2  Pg 22
+    # Equation 2.2  Page 22
     zenith = math.sin(lat) * math.sin(dec) + math.cos(lat) * math.cos(dec) * math.cos(h)
 
     print_v("zenith:\t", zenith)
@@ -225,6 +235,7 @@ def solar_rad(args):
         Q_S = 0
     else:
         # NOTE: Ignoring elliptical orbit for now
+        # Based on Equation 2.1  Page 23
         Q_S = S * eor**2 * (1 - a) * zen * tau_s
 
     print_v("Q_S:\t", Q_S)
@@ -250,6 +261,7 @@ def main(args):
     T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
 
     d_t   = args.forecast_period
+    # Based on only equation in question 6 Page 61
     d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_s_init - T_g)) * d_t / c_g
     # last term approximates Q_G the ground heat flux
 
