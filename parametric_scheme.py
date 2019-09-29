@@ -321,13 +321,13 @@ if __name__ == '__main__':
             help='Forecast period in seconds (600 to 3600) default=3600',
             default=3600, type=int, metavar="[600, 3600]", choices=[Range(600, 3601)])
     optional.add_argument('-tr', '--transmissivity',
-            help='Atmospheric transmissivity default=0.8',
+            help='Atmospheric transmissivity (greater than 0) default=0.8',
             default=0.8, type=float)
     optional.add_argument('-em', '--emissivity',
             help='Surface emissivity (0.9 to 0.99) default=0.95',
             default=0.95, type=float, metavar="[0.9, 0.99]", choices=[Range(0.9, 0.99)])
     optional.add_argument('-pw', '--precip_water',
-            help='Precipitable water default=2.5',
+            help='Precipitable water (greater than 0) default=2.5',
             default=2.5, type=float)
     optional.add_argument('-br', '--bowen_ratio',
             help='Bowen ratio (0 to 1) default=0.9',

@@ -78,20 +78,20 @@ Included parameters:
 
   * Optional:
 
-| Name               | Short | Long              | Description                             | Default |
-|--------------------|-------|-------------------|-----------------------------------------|---------|
-| Hour               | -ho   | --hour            | Hour of day; 0 to 24                    | 12      |
-| Albedo             | -al   | --albedo          | Albedo; 0 to 1                          | 0.3     |
-| Cloud fraction     | -cf   | --cloud_fraction  | Cloud fraction; 0 to 1                  | 0       |
-| Solstice           | -ds   | --day_of_solstice | Day of solstice; 172 or 173             | 173     |
-| UTC offset         | -uo   | --utc_offset      | UTC offset in hours; -12 to 12          | 0       |
-| Forecast period    | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600 | 3600    |
-| Transmissivity     | -tr   | --transmissivity  | Atmospheric transmissivity              | 0.8     |
-| Emissivity         | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99         | 0.95    |
-| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; 0 to 1                     | 0.9     |
-| Precipitable water | -pw   | --precip_water    | Precipitable water                      | 0.25    |
-| Help               | -h    | --help            | Show this help message and exit         | N/A     |
-| Verbose            | -v    | --verbose         | Print additional information            | N/A     |
+| Name               | Short | Long              | Description                                | Default |
+|--------------------|-------|-------------------|--------------------------------------------|---------|
+| Hour               | -ho   | --hour            | Hour of day; 0 to 24                       | 12      |
+| Albedo             | -al   | --albedo          | Albedo; 0 to 1                             | 0.3     |
+| Cloud fraction     | -cf   | --cloud_fraction  | Cloud fraction; 0 to 1                     | 0       |
+| Solstice           | -ds   | --day_of_solstice | Day of solstice; 172 or 173                | 173     |
+| UTC offset         | -uo   | --utc_offset      | UTC offset in hours; -12 to 12             | 0       |
+| Forecast period    | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600    | 3600    |
+| Transmissivity     | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0 | 0.8     |
+| Emissivity         | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99            | 0.95    |
+| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; 0 to 1                        | 0.9     |
+| Precipitable water | -pw   | --precip_water    | Precipitable water; greater than 0         | 0.25    |
+| Help               | -h    | --help            | Show this help message and exit            | N/A     |
+| Verbose            | -v    | --verbose         | Print additional information               | N/A     |
 
 Parameters to add:
   * Required:
@@ -125,7 +125,8 @@ Constants used:
 
 * Improve command line options
   * Support ground reservoir and surface temperatures in Celsius
-  * Add more range checks: transmissivity and precipitable water
+  * Add more argparse range checks:
+    * transmissivity and precipitable water should both be greater than 0
 * Improve documentation
   * Add more usage examples
     * Illustrate the most important command line options
