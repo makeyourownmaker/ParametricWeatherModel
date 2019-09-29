@@ -130,11 +130,13 @@ Pull requests are welcome.  For major changes, please open an issue first to dis
 
 * [Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html) 
   by [Luke Madaus](http://midlatitude.com/lukemadaus/)
-* [Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://www.cambridge.org/core/books/parameterization-schemes/C7C8EC8901957314433BE7C8BC36F16D#fndtn-information) 
+* [Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://doi.org/10.1017/CBO9780511812590) 
   by [David J. Stensrud](http://www.met.psu.edu/people/djs78)
-* The [ESCOMP repositories](https://github.com/ESCOMP) particularly the Community Land Model included in [CTSM](https://github.com/ESCOMP/ctsm)
-  which has detailed [https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Radiative_Fluxes/CLM50_Tech_Note_Radiative_Fluxes.html](radiative flux) 
-  and [https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Fluxes/CLM50_Tech_Note_Fluxes.html#sensible-and-latent-heat-fluxes-for-non-vegetated-surfaces](heat flux) 
+* The [ESCOMP repositories](https://github.com/ESCOMP) particularly the Community Land Model included in 
+  [CTSM](https://github.com/ESCOMP/ctsm) which has detailed 
+  [radiative flux](https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Radiative_Fluxes/CLM50_Tech_Note_Radiative_Fluxes.html)
+  and 
+  [heat flux](https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Fluxes/CLM50_Tech_Note_Fluxes.html#sensible-and-latent-heat-fluxes-for-non-vegetated-surfaces)
   calculations
 
 
