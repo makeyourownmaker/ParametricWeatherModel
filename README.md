@@ -126,7 +126,9 @@ Constants used:
 * Improve command line options
   * Support ground reservoir and surface temperatures in Celsius
   * Add more argparse range checks:
-    * transmissivity and precipitable water should both be greater than 0
+    * Transmissivity and precipitable water should both be greater than 0
+    * Use something similar to [this stackoverflow answer](https://stackoverflow.com/a/25296177/100129) which supports max=None as default value
+      * alternatively find upper limits for these values
 * Improve documentation
   * Add more usage examples
     * Illustrate the most important command line options
