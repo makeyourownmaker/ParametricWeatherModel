@@ -154,16 +154,27 @@ def local_hour(args):
     Calculate local hour of the sun
     '''
 
+    # lon   = args.longitude
+    # h_utc = hour_to_utc(args)
+    # Equation 2.4  Page 24
+    # h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
+    # print_v("h:\t", h)
+    # Didn't get the above equation for h to work
+
     # See following web page for explanation of each equation
     # https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time
     LSTM = 15 * args.utc_offset
-    B    = math.radians(360 * (args.day_of_year - 81) / 365)
+    B    = math.radians(360 * (args.day_of_year - 81) / 365.25)
     EOT  = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
 
     TC  = 4 * (args.longitude - LSTM) + EOT
     LST = args.hour + TC / 60
     HRA = 15 * (LST - 12)
+    print_v("LSTM:\t", LSTM)
+    print_v("B:\t", B)
     print_v("EOT:\t", EOT)
+    print_v("TC:\t", TC)
+    print_v("LST:\t", LST)
     print_v("HRA:\t", HRA)
 
     return HRA
@@ -234,7 +245,7 @@ def solar_rad(args):
     if zen < 0:
         Q_S = 0
     else:
-        # NOTE: Ignoring elliptical orbit for now
+        # NOTE Ignoring elliptical orbit for now
         # Based on Equation 2.1  Page 23
         Q_S = S * eor**2 * (1 - a) * zen * tau_s
 
@@ -260,10 +271,10 @@ def main(args):
     T_g  = f_to_k(args.ground_temp)       # K - Reservoir temperature
     T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
 
-    d_t   = args.forecast_period
+    d_t = args.forecast_period
     # Based on only equation in question 6 Page 61
     d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_s_init - T_g)) * d_t / c_g
-    # last term approximates Q_G the ground heat flux
+    # NOTE Last term approximates Q_G the ground heat flux
 
     T_s = k_to_f(T_s_init + d_T_s)
 
