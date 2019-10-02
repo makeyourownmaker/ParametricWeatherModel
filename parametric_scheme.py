@@ -117,7 +117,7 @@ def sensible_heat_flux(args):
     Calculate sensible heat flux
     '''
 
-    # Constants
+    # "Constants"
     k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1 - Thermal conductivity of air
 
     T_g = f_to_k(args.ground_temp)
@@ -142,6 +142,26 @@ def latent_heat_flux(args, Q_H):
     print_v("Q_E:\t", Q_E)
 
     return Q_E
+
+
+def ground_heat_flux(args):
+    '''
+    Calculate ground heat flux
+    '''
+
+    # "Constants"
+    K = 11  # J m^-2 K^-1 s^-1 - Thermal diffusivity of air
+
+    T_g = f_to_k(args.ground_temp)        # K - Reservoir temperature
+    T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
+
+    # Based on last term in only equation in question 6  Page 61
+    Q_G = K * (T_s_init - T_g)
+    # NOTE This is an approximation
+
+    print_v("Q_G:\t", Q_G)
+
+    return Q_G
 
 
 def local_hour(args):
@@ -273,20 +293,18 @@ def main(args):
 
     # "Constants"
     c_g = 1.4 * 10**5  # J m^-2 K^-1      - Soil heat capacity
-    K   = 11           # J m^-2 K^-1 s^-1 - Thermal diffusivity of the air
 
     Q_S  = solar_rad(args)                # Incoming solar radiation
     Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
     Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
     Q_H  = sensible_heat_flux(args)       # Sensible heat flux
     Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
-    T_g  = f_to_k(args.ground_temp)       # K - Reservoir temperature
+    Q_G  = ground_heat_flux(args)         # Ground heat flux
     T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
 
     d_t = args.forecast_period
     # Based on only equation in question 6  Page 61
-    d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_s_init - T_g)) * d_t / c_g
-    # NOTE Last term approximates Q_G the ground heat flux
+    d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
 
     T_s = k_to_f(T_s_init + d_T_s)
 
