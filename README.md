@@ -109,12 +109,15 @@ Constants used:
 | Soil heat capacity          | 1.4 * 10**5     | J m^-2 K^-1      | Yes                      |
 | Thermal diffusivity of air  | 11              | J m^-2 K^-1 s^-1 | Yes                      |
 
-### Limitations
+### Limitations and assumptions
 
-  * Earth's elliptical orbit is ignored
+  * Pollution is ignored
+  * A host of atmospheric factors are ignored: refraction, humidity, pressure, wind, rain, snow etc
+  * A host of geographic factors are ignored: elevation, slope of terrain, soil type, soil moisture, vegetation etc
+  * Sunspot activity may influence the solar constant
+  * Thermal conductivity of air is affected by temperature and pressure
   * Some variables are treated as constants e.g. transmissivity
-  * Hardcoded parameters include: thermal diffusivity of air, soil heat
-    capacity and solar radiation
+  * Hardcoded parameters include: thermal diffusivity of air and soil heat capacity 
   * Assumes temperature at 40 hPa above the ground surface equals surface
     temperature which it certainly does not
   * Assumes temperature at the base of the cloud equals surface
@@ -133,7 +136,15 @@ Constants used:
   * Add more usage examples
     * Illustrate the most important command line options
   * Possibly add some illustrative plots
+    * Including one for each of the heat fluxes
+* Checks
+  * Sensible heat flux increases during morning reaching a maximum in the 
+    afternoon before decreasing to zero after sunset on cloudless summer days
+  * Surface energy budget should balance - Equation 2.102  Page 55:
+    * Sensible heat flux (Q_H), latent heat flux (Q_E) and ground heat flux (Q_G) 
+      should be positive with high solar radiation (Q_S)
 * Add unit tests
+  * Setup travis CI
 
 
 ## Contributing
