@@ -78,15 +78,14 @@ def downwelling_rad(args):
 
     b   = args.cloud_fraction  # Cloud fraction
     e_g = args.emissivity      # Surface emissivity
-    T_a = f_to_k(args.surface_temp)    # Temperature at 40 hPa above the ground surface
-    T_c = f_to_k(args.surface_temp)    # Temperature at the base of the cloud
+    T_a = f_to_k(args.surface_temp)  # Temperature at 40 hPa above the ground surface
+    T_c = f_to_k(args.surface_temp)  # Temperature at the base of the cloud
     # NOTE Assuming T_a equals surface_temp which it very definitely does not
     # NOTE Assuming T_c equals surface_temp which it very definitely does not
 
     e_a = atmospheric_emissivity(args)
 
     # Equation 2.8  Page 27
-    # Q_Ld = e_g * e_a * sigma * T_a**4
     Q_Ld = e_g * e_a * sigma * T_a**4 + b * e_g * (1 - e_a) * sigma * T_c**4
 
     print_v("Q_Ld:\t", Q_Ld)
@@ -119,17 +118,13 @@ def sensible_heat_flux(args):
     '''
 
     # Constants
-    # pho = 1.225  # air density - Kg m^-3 (at 1013.25 hPa (abs) and 15 C)
-    # c_p = 1004   # specific heat at constant pressure - J K^-1 Kg^-1
-    # r_H = 1      # resistance to sensible heat flux - s m^-1
-    k_a = 2.5 * 10**(-2)  # Thermal conductivity of air W m^-1 K^-1 s^-1
+    k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1 - Thermal conductivity of air
 
     T_g = f_to_k(args.ground_temp)
     T_s = f_to_k(args.surface_temp)
 
-    # Equation 2.18  Page 30
-    Q_H = - k_a * (T_g - T_s)  # Or T_s - T_g??
-    # Q_H = pho * c_p * (T_s - T_g) / r_H  # Or T_g - T_s??
+    # Based on Equation 2.18  Page 30
+    Q_H = - k_a * (T_g - T_s)
 
     print_v("Q_H:\t", Q_H)
 
@@ -154,25 +149,27 @@ def local_hour(args):
     Calculate local hour of the sun
     '''
 
+    # TODO Fix local hour of the sun calculation
+    # Didn't get the below equation for h to work
     # lon   = args.longitude
     # h_utc = hour_to_utc(args)
     # Equation 2.4  Page 24
     # h = (h_utc - 12) * math.pi / 12 + lon * math.pi / 180
     # print_v("h:\t", h)
-    # Didn't get the above equation for h to work
 
     # See following web page for explanation of each equation
     # https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time
+    # EoT is an approximation accurate to within 1/2 minute
     LSTM = 15 * args.utc_offset
     B    = math.radians(360 * (args.day_of_year - 81) / 365.25)
-    EOT  = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
+    EoT  = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
 
-    TC  = 4 * (args.longitude - LSTM) + EOT
+    TC  = 4 * (args.longitude - LSTM) + EoT
     LST = args.hour + TC / 60
     HRA = 15 * (LST - 12)
     print_v("LSTM:\t", LSTM)
     print_v("B:\t", B)
-    print_v("EOT:\t", EOT)
+    print_v("EOT:\t", EoT)
     print_v("TC:\t", TC)
     print_v("LST:\t", LST)
     print_v("HRA:\t", HRA)
@@ -227,15 +224,31 @@ def hour_to_utc(args):
     return utc_hour
 
 
+def elliptical_orbit_ratio(args):
+    '''
+    Calculate elliptical orbit ratio
+    '''
+
+    # See following web page for explanation
+    # https://physics.stackexchange.com/q/177949
+    # NOTE This is an approximation
+    #      Earth reaches perihelion between 4th & 6th of January depending on year
+    doy   = args.day_of_year
+    angle = math.radians(0.9856 * (doy - 4))
+    eor   = 1 / (1 - 0.01672 * math.cos(angle))
+
+    return eor
+
+
 def solar_rad(args):
     '''
     Calculate incoming solar radiation at latitude, longitude, day and hour
     '''
 
     # "Constants"
-    S = 1368                 # W m^-2 - Solar irradiance
-    # d_bar = 1.50 * 10**11  # m      - Mean distance from sun to Earth
-    eor = 1  # Elliptical orbit ratio NOTE Ignoring elliptical orbit for now
+    S = 1368  # W m^-2 - Solar irradiance
+
+    eor = elliptical_orbit_ratio(args)
 
     tau_s = args.transmissivity  # Atmospheric transmissivity
     a     = args.albedo
@@ -245,7 +258,6 @@ def solar_rad(args):
     if zen < 0:
         Q_S = 0
     else:
-        # NOTE Ignoring elliptical orbit for now
         # Based on Equation 2.1  Page 23
         Q_S = S * eor**2 * (1 - a) * zen * tau_s
 
@@ -272,7 +284,7 @@ def main(args):
     T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
 
     d_t = args.forecast_period
-    # Based on only equation in question 6 Page 61
+    # Based on only equation in question 6  Page 61
     d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - K * (T_s_init - T_g)) * d_t / c_g
     # NOTE Last term approximates Q_G the ground heat flux
 
