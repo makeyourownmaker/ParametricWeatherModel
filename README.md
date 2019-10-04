@@ -92,7 +92,7 @@ Included parameters:
 | Forecast period    | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600    | 3600    |
 | Transmissivity     | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0 | 0.8     |
 | Emissivity         | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99            | 0.95    |
-| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; -5 to 5                       | 0.9     |
+| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; -10 to 10                     | 0.9     |
 | Precipitable water | -pw   | --precip_water    | Precipitable water; greater than 0         | 0.25    |
 | Help               | -h    | --help            | Show this help message and exit            | N/A     |
 | Verbose            | -v    | --verbose         | Print additional information               | N/A     |
