@@ -377,8 +377,8 @@ if __name__ == '__main__':
             help='Precipitable water (greater than 0) default=2.5',
             default=2.5, type=float)
     optional.add_argument('-br', '--bowen_ratio',
-            help='Bowen ratio (-5 to 5) default=0.9',
-            default=0.9, type=float, metavar="[-5.0, 5.0]", choices=[Range(-5.0, 5.0)])
+            help='Bowen ratio (-10 to 10) default=0.9',
+            default=0.9, type=float, metavar="[-10.0, 10.0]", choices=[Range(-10.0, 10.0)])
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
