@@ -7,6 +7,12 @@ import argparse
 import datetime
 
 
+# NOTE Equation and page numbers in the comments refer to
+# Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models
+# https://doi.org/10.1017/CBO9780511812590
+# by David J. Stensrud http://www.met.psu.edu/people/djs78
+
+
 class Range(object):
     def __init__(self, start, end):
         self.start = start
@@ -137,7 +143,7 @@ def latent_heat_flux(args, Q_H):
     '''
 
     # Based on the definition on Page 22
-    Q_E = Q_H * args.bowen_ratio
+    Q_E = Q_H / args.bowen_ratio
 
     print_v("Q_E:\t", Q_E)
 
@@ -152,11 +158,11 @@ def ground_heat_flux(args):
     # "Constants"
     K = 11  # J m^-2 K^-1 s^-1 - Thermal diffusivity of air
 
-    T_g = f_to_k(args.ground_temp)        # K - Reservoir temperature
-    T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
+    T_g = f_to_k(args.ground_temp)   # K - Ground reservoir temperature
+    T_s = f_to_k(args.surface_temp)  # K - Surface air temperature
 
     # Based on last term in only equation in question 6  Page 61
-    Q_G = K * (T_s_init - T_g)
+    Q_G = K * (T_s - T_g)
     # NOTE This is an approximation
 
     print_v("Q_G:\t", Q_G)
@@ -371,8 +377,8 @@ if __name__ == '__main__':
             help='Precipitable water (greater than 0) default=2.5',
             default=2.5, type=float)
     optional.add_argument('-br', '--bowen_ratio',
-            help='Bowen ratio (0 to 1) default=0.9',
-            default=0.9, type=float, metavar="[0.0, 1.0]", choices=[Range(0.0, 1.0)])
+            help='Bowen ratio (-5 to 5) default=0.9',
+            default=0.9, type=float, metavar="[-5.0, 5.0]", choices=[Range(-5.0, 5.0)])
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
