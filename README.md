@@ -65,6 +65,10 @@ The python code models the following radiative processes:
   * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
   * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
 
+Equation and page numbers in the python code refer to
+[Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://doi.org/10.1017/CBO9780511812590)
+by [David J. Stensrud](http://www.met.psu.edu/people/djs78).
+
 Included parameters:
   * Required:
 
@@ -88,7 +92,7 @@ Included parameters:
 | Forecast period    | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600    | 3600    |
 | Transmissivity     | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0 | 0.8     |
 | Emissivity         | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99            | 0.95    |
-| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; 0 to 1                        | 0.9     |
+| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; -5 to 5                       | 0.9     |
 | Precipitable water | -pw   | --precip_water    | Precipitable water; greater than 0         | 0.25    |
 | Help               | -h    | --help            | Show this help message and exit            | N/A     |
 | Verbose            | -v    | --verbose         | Print additional information               | N/A     |
@@ -117,7 +121,7 @@ Constants used:
   * Sunspot activity may influence the solar constant
   * Thermal conductivity of air is affected by temperature and pressure
   * Some variables are treated as constants e.g. transmissivity
-  * Hardcoded parameters include: thermal diffusivity of air and soil heat capacity 
+  * Hardcoded parameters include: thermal diffusivity of air and soil heat capacity
   * Assumes temperature at 40 hPa above the ground surface equals surface
     temperature which it certainly does not
   * Assumes temperature at the base of the cloud equals surface
@@ -126,25 +130,34 @@ Constants used:
 
 ## Roadmap
 
-* Improve command line options
+* Investigate night time temperatures:
+  * Anecdotally temperatures seem too low at night
+  * There may be problems with the sensible and latent heat flux values
+
+* Sanity checks:
+  * Sensible heat flux increases during morning reaching a maximum in the
+    afternoon before decreasing to zero after sunset on cloudless summer days
+  * Surface energy budget should balance - Equation 2.102  Page 55:
+    * Sensible heat flux (Q_H), latent heat flux (Q_E) and ground heat flux (Q_G)
+      should be positive with high solar radiation (Q_S)
+
+* Add unit tests:
+  * Setup travis CI
+  * Find range of test cases where surface temperature and all parameters are known
+  * What is an acceptable prediction interval?
+
+* Improve command line options:
   * Support ground reservoir and surface temperatures in Celsius
   * Add more argparse range checks:
     * Transmissivity and precipitable water should both be greater than 0
     * Use something similar to [this stackoverflow answer](https://stackoverflow.com/a/25296177/100129) which supports max=None as default value
       * alternatively find upper limits for these values
-* Improve documentation
+
+* Improve documentation:
   * Add more usage examples
     * Illustrate the most important command line options
   * Possibly add some illustrative plots
     * Including one for each of the heat fluxes
-* Checks
-  * Sensible heat flux increases during morning reaching a maximum in the 
-    afternoon before decreasing to zero after sunset on cloudless summer days
-  * Surface energy budget should balance - Equation 2.102  Page 55:
-    * Sensible heat flux (Q_H), latent heat flux (Q_E) and ground heat flux (Q_G) 
-      should be positive with high solar radiation (Q_S)
-* Add unit tests
-  * Setup travis CI
 
 
 ## Contributing
