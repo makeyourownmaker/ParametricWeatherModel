@@ -13,13 +13,34 @@ import datetime
 # by David J. Stensrud http://www.met.psu.edu/people/djs78
 
 
-class Range(object):
-    def __init__(self, start, end):
-        self.start = start
-        self.end   = end
+def float_range(min=None, max=None):
+    def check_range(x):
+        x = float(x)
 
-    def __eq__(self, other):
-        return self.start <= other <= self.end
+        if x < min and min is not None:
+            raise argparse.ArgumentTypeError("%r not in range [%r, %r]" % (x, min, max))
+
+        if x > max and max is not None:
+            raise argparse.ArgumentTypeError("%r not in range [%r, %r]" % (x, min, max))
+
+        return x
+
+    return check_range
+
+
+def int_range(min=None, max=None):
+    def check_range(x):
+        x = int(x)
+
+        if x < min and min is not None:
+            raise argparse.ArgumentTypeError("%r not in range [%r, %r]" % (x, min, max))
+
+        if x > max and max is not None:
+            raise argparse.ArgumentTypeError("%r not in range [%r, %r]" % (x, min, max))
+
+        return x
+
+    return check_range
 
 
 def f_to_k(f):
@@ -332,13 +353,13 @@ if __name__ == '__main__':
     required = parser.add_argument_group('required arguments')
     required.add_argument('-la', '--latitude',
             help='Latitude (-90 to 90; plus for north, minus for south)',
-            required=True, type=float, metavar="[-90.0, 90.0]", choices=[Range(-90.0, 90.0)])
+            required=True, type=float_range(-90.0, 90.0), metavar="[-90.0, 90.0]")
     required.add_argument('-lo', '--longitude',
             help='Longitude (-180 to 180; plus for east, minus for west)',
-            required=True, type=float, metavar="[-180.0, 180.0]", choices=[Range(-180.0, 180.0)])
+            required=True, type=float_range(-180.0, 180.0), metavar="[-180.0, 180.0]")
     required.add_argument('-da', '--day_of_year',
-            help='Julian day of year (1 to 365)',
-            required=True, type=int, metavar="[1, 365]", choices=[Range(1, 366)])
+            help='Julian day of year',
+            required=True, type=int_range(0, 365), metavar="[1, 365]")
     required.add_argument('-gt', '--ground_temp',
             help='Ground reservoir temperature (Fahrenheit only)',
             type=float)
@@ -350,35 +371,35 @@ if __name__ == '__main__':
             help='Print additional information',
             default=True, action="store_false")
     optional.add_argument('-ho', '--hour',
-            help='Hour of day (0 to 24) default=12',
+            help='Hour of day - default=12',
             default=12, type=int, metavar="[0, 24]", choices=range(0, 25))
     optional.add_argument('-al', '--albedo',
-            help='Albedo (0 to 1) default=0.3',
-            default=0.3, type=float, metavar="[0.0, 1.0]", choices=[Range(0.0, 1.0)])
+            help='Albedo - default=0.3',
+            default=0.3, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-cf', '--cloud_fraction',
-            help='Cloud fraction (0 to 1) default=0',
-            default=0, type=float, metavar="[0.0, 1.0]", choices=[Range(0.0, 1.0)])
+            help='Cloud fraction - default=0',
+            default=0, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-ds', '--day_of_solstice',
-            help='Day of solstice (172 or 173) default=173',
+            help='Day of solstice - default=173',
             default=173, type=int, metavar="[172, 173]", choices=range(172, 174))
     optional.add_argument('-uo', '--utc_offset',
-            help='UTC offset in hours (-12 to 12) default=0',
+            help='UTC offset in hours - default=0',
             default=0, type=int, metavar="[-12, 12]", choices=range(-12, 13))
     optional.add_argument('-fp', '--forecast_period',
-            help='Forecast period in seconds (600 to 3600) default=3600',
-            default=3600, type=int, metavar="[600, 3600]", choices=[Range(600, 3601)])
+            help='Forecast period in seconds - default=3600',
+            default=3600, type=int_range(600, 3601), metavar="[600, 3600]")
     optional.add_argument('-tr', '--transmissivity',
             help='Atmospheric transmissivity (greater than 0) default=0.8',
-            default=0.8, type=float)
+            default=0.8, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-em', '--emissivity',
-            help='Surface emissivity (0.9 to 0.99) default=0.95',
-            default=0.95, type=float, metavar="[0.9, 0.99]", choices=[Range(0.9, 0.99)])
+            help='Surface emissivity - default=0.95',
+            default=0.95, type=float_range(0.9, 0.99), metavar="[0.9, 0.99]")
     optional.add_argument('-pw', '--precip_water',
             help='Precipitable water (greater than 0) default=2.5',
-            default=2.5, type=float)
+            default=2.5, metavar="[0.0, None]", type=float_range(0.0, None))
     optional.add_argument('-br', '--bowen_ratio',
-            help='Bowen ratio (-10 to 10) default=0.9',
-            default=0.9, type=float, metavar="[-10.0, 10.0]", choices=[Range(-10.0, 10.0)])
+            help='Bowen ratio - default=0.9',
+            default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
