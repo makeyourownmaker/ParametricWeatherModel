@@ -22,10 +22,10 @@ issue if you find a problem.
 Predict surface temperature at specified latitude, longitude, day of year,
 ground temperature and initial surface temperature:
 ```sh
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72
+python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -rh 10
 
 # Similarly with long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --resistance 10
 
 # To list command line options
 python parametric_scheme.py -h
@@ -72,13 +72,14 @@ by [David J. Stensrud](http://www.met.psu.edu/people/djs78).
 Included parameters:
   * Required:
 
-| Name                | Short | Long           | Description                                  | Default |
-|---------------------|-------|----------------|----------------------------------------------|---------|
-| Latitude            | -la   | --latitude     | -90 to 90; plus for north, minus for south   | N/A     |
-| Longitude           | -lo   | --longitude    | -180 to 180; plus for east, minus for west   | N/A     |
-| Day                 | -da   | --day_of_year  | Julian day of year; 1 to 365                 | N/A     |
-| Surface temperature | -st   | --surface_temp | Initial surface air temperature (Fahrenheit) | N/A     |
-| Ground temperature  | -gt   | --ground_temp  | Ground reservoir temperature (Fahrenheit)    | N/A     |
+| Name                    | Short | Long           | Description                                  | Default |
+|-------------------------|-------|----------------|----------------------------------------------|---------|
+| Latitude                | -la   | --latitude     | -90 to 90; plus for north, minus for south   | N/A     |
+| Longitude               | -lo   | --longitude    | -180 to 180; plus for east, minus for west   | N/A     |
+| Day                     | -da   | --day_of_year  | Julian day of year; 1 to 365                 | N/A     |
+| Surface temperature     | -st   | --surface_temp | Initial surface air temperature (Fahrenheit) | N/A     |
+| Ground temperature      | -gt   | --ground_temp  | Ground reservoir temperature (Fahrenheit)    | N/A     |
+| Resistance to heat flux | -rh   | --resistance   | Resistance to heat flux (m s^-1)             | N/A     |
 
   * Optional:
 
