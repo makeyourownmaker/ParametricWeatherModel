@@ -139,19 +139,29 @@ def upwelling_rad(args):
     return Q_Lu
 
 
-def sensible_heat_flux(args):
+def sensible_heat_flux(args, Q_S):
     '''
     Calculate sensible heat flux
     '''
 
     # "Constants"
-    k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1 - Thermal conductivity of air
+    # k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1 - Thermal conductivity of air
+    rho = 1.225  # kg m^-3 - Density of air at sea level and 15 degrees C
+    c_p = 1004   # J K^-1 kg^-1 - Specific heat at constant pressure
 
+    r_H = args.resistance  # s m^-1 - Resistance to heat flux
     T_g = f_to_k(args.ground_temp)
     T_s = f_to_k(args.surface_temp)
 
     # Based on Equation 2.18  Page 30
-    Q_H = - k_a * (T_g - T_s)
+    # Q_H = - k_a * (T_g - T_s)
+
+    # Based on Question 6  Pages 60 and 61
+    # Q_H = 0.15 * Q_S
+    # Q_H = 0.30 * Q_S
+
+    # Based on Equation 2.23  Page 31
+    Q_H = rho * c_p * (T_g - T_s) / r_H
 
     print_v("Q_H:\t", Q_H)
 
@@ -319,24 +329,30 @@ def main(args):
     '''
 
     # "Constants"
-    c_g = 1.4 * 10**5  # J m^-2 K^-1      - Soil heat capacity
+    c_g = 1.4 * 10**5  # J m^-2 K^-1 - Soil heat capacity
+    d_t = 1
 
-    Q_S  = solar_rad(args)                # Incoming solar radiation
-    Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
-    Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
-    Q_H  = sensible_heat_flux(args)       # Sensible heat flux
-    Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
-    Q_G  = ground_heat_flux(args)         # Ground heat flux
-    T_s_init = f_to_k(args.surface_temp)  # K - Initial ground temperature
+    for i in range(1, args.forecast_period):
+        Q_S  = solar_rad(args)                # Incoming solar radiation
+        Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
+        Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
+        Q_H  = sensible_heat_flux(args, Q_S)  # Sensible heat flux
+        Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
+        Q_G  = ground_heat_flux(args)         # Ground heat flux
 
-    d_t = args.forecast_period
-    # Based on only equation in question 6  Page 61
-    d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
+        # See Section 2.7  Page 56
+        # if Q_S == 0:
+        #     Q_H  = - Q_H
+        #     Q_E  = - Q_E
+        #     Q_G  = 0
 
-    T_s = k_to_f(T_s_init + d_T_s)
+        # Based on only equation in question 6  Page 61
+        d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
+        print_v("d_T_s:\t", d_T_s)  # , "K")
 
-    print_v("d_T_s:\t", d_T_s, "K")
-    print("T_s:\t", T_s, "F")
+        args.surface_temp = k_to_f(f_to_k(args.surface_temp) + d_T_s)
+
+    print("T_s:\t", args.surface_temp)  # , "F")
 
     return 0
 
@@ -366,6 +382,9 @@ if __name__ == '__main__':
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit only)',
             type=float)
+    required.add_argument('-rh', '--resistance',
+            help='Resistance to heat flux (greater than 0)',
+            required=True, type=float_range(0, None), metavar="[0, None]")
 
     optional.add_argument('-v',  '--verbose',
             help='Print additional information',
@@ -396,7 +415,7 @@ if __name__ == '__main__':
             default=0.95, type=float_range(0.9, 0.99), metavar="[0.9, 0.99]")
     optional.add_argument('-pw', '--precip_water',
             help='Precipitable water (greater than 0) default=2.5',
-            default=2.5, metavar="[0.0, None]", type=float_range(0.0, None))
+            default=2.5, type=float_range(0.0, None), metavar="[0.0, None]")
     optional.add_argument('-br', '--bowen_ratio',
             help='Bowen ratio - default=0.9',
             default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
