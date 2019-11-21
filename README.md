@@ -106,13 +106,15 @@ Parameters to add:
 Constants used:
 **Note**: Strictly speaking some of these values are not constants; meaning constant values have been used as simpliying approximations.
 
-| Constant                    | Value           | Unit             | Simpliying approximation |
-|-----------------------------|-----------------|------------------|--------------------------|
-| Stefan-Boltzmann            | 5.67 * 10**(-8) | W m^-2 K^-4      | No                       |
-| Thermal conductivity of air | 2.5 * 10**(-2)  | W m^-1 K^-1 s^-1 | No                       |
-| Solar irradiance            | 1368            | W m^-2           | No                       |
-| Soil heat capacity          | 1.4 * 10**5     | J m^-2 K^-1      | Yes                      |
-| Thermal diffusivity of air  | 11              | J m^-2 K^-1 s^-1 | Yes                      |
+| Constant                                     | Value           | Unit             | Simpliying approximation |
+|----------------------------------------------|-----------------|------------------|--------------------------|
+| Stefan-Boltzmann                             | 5.67 * 10**(-8) | W m^-2 K^-4      | No                       |
+| Thermal conductivity of air                  | 2.5 * 10**(-2)  | W m^-1 K^-1 s^-1 | No                       |
+| Solar irradiance                             | 1368            | W m^-2           | No                       |
+| Soil heat capacity                           | 1.4 * 10**5     | J m^-2 K^-1      | Yes                      |
+| Thermal diffusivity of air                   | 11              | J m^-2 K^-1 s^-1 | Yes                      |
+| Specific heat at constant pressure           | 1004            | J K^-1 kg^-1     | No                       |
+| Density of air at sea level and 15 degrees C | 1.225           | kg m^-3          | No                       |
 
 ### Limitations and assumptions
 
