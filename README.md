@@ -2,7 +2,7 @@
 # ParametricWeatherModel
 
 ![Lifecycle
-](https://img.shields.io/badge/lifecycle-experimental-orange.svg?style=flat)
+](https://img.shields.io/badge/lifecycle-maturing-blue.svg?style=flat)
 ![Dependencies
 ](https://img.shields.io/badge/dependencies-none-brightgreen.svg?style=flat)
 
@@ -12,7 +12,7 @@ based primarily on latitude, longitude, day of year and hour of day.
 
 ## Development Stage
 
-The repository is under active, but early, development.  It contains some
+The repository is slowly maturing.  It contains some
 limitations, hardcoded parameters and possibly errors.  Please file an
 issue if you find a problem.
 
@@ -22,12 +22,12 @@ issue if you find a problem.
 Predict surface temperature at specified latitude, longitude, day of year,
 ground temperature and initial surface temperature:
 ```sh
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -rh 10
+python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2
 
-# Similarly with long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --resistance 10
+# The same using long options
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0.2
 
-# To list command line options
+# To list all command line options
 python parametric_scheme.py -h
 ```
 
@@ -65,38 +65,54 @@ The python code models the following radiative processes:
   * Sensible heat flux (heat transfer per unit area from the ground to the atmosphere)
   * Latent heat flux (rate of moisture transfer per unit area from the ground surface to the atmosphere)
 
+There are two options for calculating the sensible heat flux:
+  1) The default method uses percent of net radiation ( --percent_net_radiation )
+  2) The experimental method uses resistance to heat flux ( --resistance )
+
+To use the experimental method the percent of net radiation must be set to 0:
+```sh
+python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000
+
+# The same using long options
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0 --resistance 1000
+```
+
 Equation and page numbers in the python code refer to
 [Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://doi.org/10.1017/CBO9780511812590)
 by [David J. Stensrud](http://www.met.psu.edu/people/djs78).
 
+The script reproduces some of the results of [Luke Madaus](http://midlatitude.com/lukemadaus/),
+[Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html).
+
 Included parameters:
   * Required:
 
-| Name                    | Short | Long           | Description                                  | Default |
-|-------------------------|-------|----------------|----------------------------------------------|---------|
-| Latitude                | -la   | --latitude     | -90 to 90; plus for north, minus for south   | N/A     |
-| Longitude               | -lo   | --longitude    | -180 to 180; plus for east, minus for west   | N/A     |
-| Day                     | -da   | --day_of_year  | Julian day of year; 1 to 365                 | N/A     |
-| Surface temperature     | -st   | --surface_temp | Initial surface air temperature (Fahrenheit) | N/A     |
-| Ground temperature      | -gt   | --ground_temp  | Ground reservoir temperature (Fahrenheit)    | N/A     |
-| Resistance to heat flux | -rh   | --resistance   | Resistance to heat flux (m s^-1)             | N/A     |
+| Name                  | Short | Long                    | Description                                  | Default |
+|-----------------------|-------|-------------------------|----------------------------------------------|---------|
+| Latitude              | -la   | --latitude              | -90 to 90; plus for north, minus for south   | N/A     |
+| Longitude             | -lo   | --longitude             | -180 to 180; plus for east, minus for west   | N/A     |
+| Day                   | -da   | --day_of_year           | Julian day of year; 1 to 365                 | N/A     |
+| Surface temperature   | -st   | --surface_temp          | Initial surface air temperature (Fahrenheit) | N/A     |
+| Ground temperature    | -gt   | --ground_temp           | Ground reservoir temperature (Fahrenheit)    | N/A     |
+| Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)               | N/A     |
 
   * Optional:
 
-| Name               | Short | Long              | Description                                | Default |
-|--------------------|-------|-------------------|--------------------------------------------|---------|
-| Hour               | -ho   | --hour            | Hour of day; 0 to 24                       | 12      |
-| Albedo             | -al   | --albedo          | Albedo; 0 to 1                             | 0.3     |
-| Cloud fraction     | -cf   | --cloud_fraction  | Cloud fraction; 0 to 1                     | 0       |
-| Solstice           | -ds   | --day_of_solstice | Day of solstice; 172 or 173                | 173     |
-| UTC offset         | -uo   | --utc_offset      | UTC offset in hours; -12 to 12             | 0       |
-| Forecast period    | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600    | 3600    |
-| Transmissivity     | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0 | 0.8     |
-| Emissivity         | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99            | 0.95    |
-| Bowen ratio        | -br   | --bowen_ratio     | Bowen ratio; -10 to 10                     | 0.9     |
-| Precipitable water | -pw   | --precip_water    | Precipitable water; greater than 0         | 0.25    |
-| Help               | -h    | --help            | Show this help message and exit            | N/A     |
-| Verbose            | -v    | --verbose         | Print additional information               | N/A     |
+| Name                    | Short | Long              | Description                                   | Default |
+|-------------------------|-------|-------------------|-----------------------------------------------|---------|
+| Hour                    | -ho   | --hour            | Hour of day; 0 to 24                          | 12      |
+| Albedo                  | -al   | --albedo          | Albedo; 0 to 1                                | 0.3     |
+| Cloud fraction          | -cf   | --cloud_fraction  | Cloud fraction; 0 to 1                        | 0       |
+| Solstice                | -ds   | --day_of_solstice | Day of solstice; 172 or 173                   | 173     |
+| UTC offset              | -uo   | --utc_offset      | UTC offset in hours; -12 to 12                | 0       |
+| Forecast period         | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600       | 3600    |
+| Transmissivity          | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0    | 0.8     |
+| Emissivity              | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99               | 0.95    |
+| Bowen ratio             | -br   | --bowen_ratio     | Bowen ratio; -10 to 10                        | 0.9     |
+| Precipitable water      | -pw   | --precip_water    | Precipitable water in cm; greater than 0      | 1.0     |
+| Resistance to heat flux | -rh   | --resistance      | EXPERIMENTAL Resistance to heat flux (m s^-1) | 0       |
+| Help                    | -h    | --help            | Show this help message and exit               | N/A     |
+| Verbose                 | -v    | --verbose         | Print additional information                  | N/A     |
 
 Parameters to add:
   * Required:
@@ -129,15 +145,13 @@ Constants used:
     temperature which it certainly does not
   * Assumes temperature at the base of the cloud equals surface
     temperature which it certainly does not
+  * Will not work over water
 
 
 ## Roadmap
 
-* Investigate night time temperatures:
-  * Anecdotally temperatures seem too low at night
-  * There may be problems with the sensible and latent heat flux values
-
 * Sanity checks:
+  * Possibly starting with Luke Madaus examples
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
   * Surface energy budget should balance - Equation 2.102  Page 55:
@@ -147,6 +161,7 @@ Constants used:
 * Add unit tests:
   * Setup travis CI
   * Find range of test cases where surface temperature and all parameters are known
+    * Possibly starting with Luke Madaus examples
   * What is an acceptable prediction interval?
 
 * Improve command line options:
