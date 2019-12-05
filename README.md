@@ -84,6 +84,8 @@ by [David J. Stensrud](http://www.met.psu.edu/people/djs78).
 The script reproduces some of the results of [Luke Madaus](http://midlatitude.com/lukemadaus/),
 [Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html).
 
+### Parameters
+
 Included parameters:
   * Required:
 
@@ -96,7 +98,7 @@ Included parameters:
 | Ground temperature    | -gt   | --ground_temp           | Ground reservoir temperature (Fahrenheit)    | N/A     |
 | Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)               | N/A     |
 
-  * Optional:
+  * Optional parameters:
 
 | Name                    | Short | Long              | Description                                   | Default |
 |-------------------------|-------|-------------------|-----------------------------------------------|---------|
