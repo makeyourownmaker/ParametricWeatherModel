@@ -89,7 +89,7 @@ def atmospheric_emissivity(args):
     '''
 
     # Equation 2.7  Page 26
-    w_p = args.precip_water
+    w_p = args.precip_water  # cm - precipitable water
     e_a = 0.725 + 0.17 * math.log10(w_p)
 
     return e_a
@@ -139,29 +139,29 @@ def upwelling_rad(args):
     return Q_Lu
 
 
-def sensible_heat_flux(args, Q_S):
+def sensible_heat_flux(args, N_R):
     '''
-    Calculate sensible heat flux
+    Calculate sensible heat flux using percent of solar radiation or
+    resistance to heat flux
     '''
 
     # "Constants"
-    # k_a = 2.5 * 10**(-2)  # W m^-1 K^-1 s^-1 - Thermal conductivity of air
     rho = 1.225  # kg m^-3 - Density of air at sea level and 15 degrees C
     c_p = 1004   # J K^-1 kg^-1 - Specific heat at constant pressure
 
-    r_H = args.resistance  # s m^-1 - Resistance to heat flux
-    T_g = f_to_k(args.ground_temp)
-    T_s = f_to_k(args.surface_temp)
+    r_H   = args.resistance             # s m^-1 - Resistance to heat flux
+    pc_nr = args.percent_net_radiation  # percent net radiation
 
-    # Based on Equation 2.18  Page 30
-    # Q_H = - k_a * (T_g - T_s)
-
-    # Based on Question 6  Pages 60 and 61
-    # Q_H = 0.15 * Q_S
-    # Q_H = 0.30 * Q_S
-
-    # Based on Equation 2.23  Page 31
-    Q_H = rho * c_p * (T_g - T_s) / r_H
+    if pc_nr != 0:
+        # Based on Question 6  Pages 60 and 61
+        Q_H = pc_nr * N_R
+    elif r_H != 0:
+        # EXPERIMENTAL  Based on Equation 2.23  Page 31
+        T_g = f_to_k(args.ground_temp)
+        T_s = f_to_k(args.surface_temp)
+        Q_H = rho * c_p * (T_g - T_s) / r_H
+    else:
+        exit("Error!\nEither 'percent net radiation' or 'resistance to heat flux' must be non-zero.\n")
 
     print_v("Q_H:\t", Q_H)
 
@@ -332,19 +332,14 @@ def main(args):
     c_g = 1.4 * 10**5  # J m^-2 K^-1 - Soil heat capacity
     d_t = 1
 
-    for i in range(1, args.forecast_period):
+    for i in range(0, args.forecast_period, d_t):
         Q_S  = solar_rad(args)                # Incoming solar radiation
         Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
         Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
-        Q_H  = sensible_heat_flux(args, Q_S)  # Sensible heat flux
+        N_R  = Q_S + Q_Ld - Q_Lu              # Net radiation
+        Q_H  = sensible_heat_flux(args, N_R)  # Sensible heat flux
         Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
         Q_G  = ground_heat_flux(args)         # Ground heat flux
-
-        # See Section 2.7  Page 56
-        # if Q_S == 0:
-        #     Q_H  = - Q_H
-        #     Q_E  = - Q_E
-        #     Q_G  = 0
 
         # Based on only equation in question 6  Page 61
         d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
@@ -382,9 +377,9 @@ if __name__ == '__main__':
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit only)',
             type=float)
-    required.add_argument('-rh', '--resistance',
-            help='Resistance to heat flux (greater than 0)',
-            required=True, type=float_range(0, None), metavar="[0, None]")
+    required.add_argument('-pr', '--percent_net_radiation',
+            help='Percent net radiation',
+            required=True, type=float_range(0, 1), metavar="[0, 1]")
 
     optional.add_argument('-v',  '--verbose',
             help='Print additional information',
@@ -414,11 +409,14 @@ if __name__ == '__main__':
             help='Surface emissivity - default=0.95',
             default=0.95, type=float_range(0.9, 0.99), metavar="[0.9, 0.99]")
     optional.add_argument('-pw', '--precip_water',
-            help='Precipitable water (greater than 0) default=2.5',
-            default=2.5, type=float_range(0.0, None), metavar="[0.0, None]")
+            help='Precipitable water in cm (greater than 0) default=1',
+            default=1, type=float_range(0.0, None), metavar="[0.0, None]")
     optional.add_argument('-br', '--bowen_ratio',
             help='Bowen ratio - default=0.9',
             default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
+    optional.add_argument('-rh', '--resistance',
+            help='EXPERIMENTAL: Resistance to heat flux (greater than 0)',
+            default=0, type=float_range(0, None), metavar="[0, None]")
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
