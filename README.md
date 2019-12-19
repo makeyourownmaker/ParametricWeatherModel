@@ -134,6 +134,36 @@ Constants used:
 | Specific heat at constant pressure           | 1004            | J K^-1 kg^-1     | No                       |
 | Density of air at sea level and 15 degrees C | 1.225           | kg m^-3          | No                       |
 
+### Comparison with Madaus
+
+Predictions from Luke Madaus
+[Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
+can be used for comparison with my implementation.
+
+Madaus does not provide any code and the explanation is terse.
+I suspect not all of the parameters involved have been listed.
+So, I would not expect identical results with Madaus.  The final
+T_S plot below shows good agreement between the Madaus
+predictions and mine for surface temperature
+(RMSE is approximately 3.2).
+
+<img src="figures/result.19.png" align="center" />
+
+The plots are as follows:
+
+| Variable | Description                       |
+|----------|-----------------------------------|
+| Q_S      | Solar radiation                   |
+| Q_Ld     | Downwelling radiation             |
+| Q_Lu     | Upwelling radiation               |
+| N_R      | Net radiation (Q_S + Q_Ld - Q_Lu) |
+| Q_H      | Sensible heat flux                |
+| Q_E      | Latent heat flux                  |
+| Q_G      | Ground heat flux                  |
+| d_T_s    | Change in surface temperature     |
+| T_s      | Surface temperature               |
+
+
 ### Limitations and assumptions
 
   * Pollution is ignored
@@ -147,23 +177,33 @@ Constants used:
     temperature which it certainly does not
   * Assumes temperature at the base of the cloud equals surface
     temperature which it certainly does not
+  * The ground heat flux equation is not sinusoidal
   * Will not work over water
 
 
 ## Roadmap
 
 * Sanity checks:
-  * Possibly starting with Luke Madaus examples
+  * Check if downwelling radiation is too low later in the Madaus comparison
+  * Starting with Luke Madaus examples
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
   * Surface energy budget should balance - Equation 2.102  Page 55:
     * Sensible heat flux (Q_H), latent heat flux (Q_E) and ground heat flux (Q_G)
       should be positive with high solar radiation (Q_S)
+  * Recent local weather examples
+  * Examples from the literature
+
+* Ground heat flux:
+  * The ground heat flux equation should be approximately sinusoidal
+  * See [section 3 in the MT23E lecture notes](http://www.met.reading.ac.uk/~swrhgnrj/teaching/MT23E/mt23e_notes.pdf)
+    by [Robin Hogan](http://www.met.reading.ac.uk/~swrhgnrj/) for a simple sinusoidal equation
 
 * Add unit tests:
   * Setup travis CI
   * Find range of test cases where surface temperature and all parameters are known
-    * Possibly starting with Luke Madaus examples
+    * Examples from the literature for each of the heat fluxes
+      * Preferably observations
   * What is an acceptable prediction interval?
 
 * Improve command line options:
@@ -198,6 +238,11 @@ Pull requests are welcome.  For major changes, please open an issue first to dis
   and
   [heat flux](https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Fluxes/CLM50_Tech_Note_Fluxes.html#sensible-and-latent-heat-fluxes-for-non-vegetated-surfaces)
   calculations
+* Table 10.1 in [lecture 10 of AS547](https://atmos.washington.edu/~breth/classes/AS547/lect/lect10.pdf)
+  from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives albedo and emmissivity values for
+  a range of natural surfaces
+* [Radiation balance](http://www.indiana.edu/~geog109/topics/04_radiation/4c-RadiationBalance_nf.pdf)
+  is discussed by Constance Brown on the G109 course
 
 
 ## License
