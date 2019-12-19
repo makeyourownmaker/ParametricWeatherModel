@@ -150,7 +150,7 @@ are probably more reasonable.
 
 <img src="figures/result.19.png" align="center" />
 
-The plots are as follows:
+The plots are in order from left to right and top to bottom:
 
 | Variable | Description                       |
 |----------|-----------------------------------|
