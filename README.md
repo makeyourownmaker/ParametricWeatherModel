@@ -145,7 +145,8 @@ I suspect not all of the parameters involved have been listed.
 So, I would not expect identical results with Madaus.  The final
 T_S plot below shows good agreement between the Madaus
 predictions and mine for surface temperature
-(RMSE is approximately 3.2).
+(RMSE is approximately 3.2).  Madaus results are in green and
+are probably more reasonable.
 
 <img src="figures/result.19.png" align="center" />
 
@@ -184,8 +185,8 @@ The plots are as follows:
 ## Roadmap
 
 * Sanity checks:
-  * Check if downwelling radiation is too low later in the Madaus comparison
   * Starting with Luke Madaus examples
+    * Check if downwelling radiation is too low later in the Madaus comparison above
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
   * Surface energy budget should balance - Equation 2.102  Page 55:
