@@ -337,6 +337,7 @@ def main(args):
         Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
         Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
         N_R  = Q_S + Q_Ld - Q_Lu              # Net radiation
+        print_v("N_R:\t", N_R)
         Q_H  = sensible_heat_flux(args, N_R)  # Sensible heat flux
         Q_E  = latent_heat_flux(args, Q_H)    # Latent heat flux
         Q_G  = ground_heat_flux(args)         # Ground heat flux
@@ -406,8 +407,8 @@ if __name__ == '__main__':
             help='Atmospheric transmissivity (greater than 0) default=0.8',
             default=0.8, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-em', '--emissivity',
-            help='Surface emissivity - default=0.95',
-            default=0.95, type=float_range(0.9, 0.99), metavar="[0.9, 0.99]")
+            help='Surface emissivity - default=0.9',
+            default=0.9, type=float_range(0.7, 0.99), metavar="[0.7, 0.99]")
     optional.add_argument('-pw', '--precip_water',
             help='Precipitable water in cm (greater than 0) default=1',
             default=1, type=float_range(0.0, None), metavar="[0.0, None]")
