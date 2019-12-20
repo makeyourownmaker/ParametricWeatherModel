@@ -143,10 +143,11 @@ can be used for comparison with my implementation.
 Madaus does not provide any code and the explanation is terse.
 I suspect not all of the parameters involved have been listed.
 So, I would not expect identical results with Madaus.  The final
-T_S plot below shows good agreement between the Madaus
+T_S plot below shows reasonable agreement between the Madaus
 predictions and mine for surface temperature
-(RMSE is approximately 3.2).  Madaus results are in green and
-are probably more reasonable.
+(RMSE is approximately 3.2).  Madaus results are plotted in green.
+Anecdotally, the downwelling radiation (Q_Ld) seems low during
+the later hours.
 
 <img src="figures/result.19.png" align="center" />
 
@@ -167,36 +168,43 @@ The plots are in order from left to right and top to bottom:
 
 ### Limitations and assumptions
 
-  * Pollution is ignored
-  * A host of atmospheric factors are ignored: refraction, humidity, pressure, wind, rain, snow etc
+  * A host of atmospheric factors are ignored: refraction, humidity, pressure, wind, rain, snow, pollution etc
   * A host of geographic factors are ignored: elevation, slope of terrain, soil type, soil moisture, vegetation etc
-  * Sunspot activity may influence the solar constant
-  * Thermal conductivity of air is affected by temperature and pressure
-  * Some variables are treated as constants e.g. transmissivity
-  * Hardcoded parameters include: thermal diffusivity of air and soil heat capacity
-  * Assumes temperature at 40 hPa above the ground surface equals surface
-    temperature which it certainly does not
-  * Assumes temperature at the base of the cloud equals surface
-    temperature which it certainly does not
-  * The ground heat flux equation is not sinusoidal
+  * Hardcoded parameters in the script:
+    * Soil heat capacity will vary with soil type etc
+    * Thermal diffusivity of air is affected by temperature, pressure etc
+    * Thermal conductivity of air is affected by temperature, pressure etc
+    * Solar constant may be influenced by sunspot activity
+    * Table A7 in [lecture 10 of AS547](https://atmos.washington.edu/~breth/classes/AS547/lect/lect10.pdf)
+      from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives thermal conductivity, thermal 
+      diffusivity and specific heat values for various surfaces
+  * Results for downwelling radiation are questionable:
+    * Assumes temperature at 40 hPa above the ground surface equals surface
+      temperature which it certainly does not
+    * Results for non-zero cloud fraction are questionable:
+      * Assumes temperature at the base of the cloud equals surface
+        temperature which it certainly does not
+  * The ground heat flux equation is not sinusoidal:
+    * Although early results are approximately sinusoidal
   * Will not work over water
 
 
 ## Roadmap
 
 * Sanity checks:
-  * Starting with Luke Madaus examples
-    * Check if downwelling radiation is too low later in the Madaus comparison above
+  * Starting with [Luke Madaus examples](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
+    * Check if downwelling radiation is too low in the later hours
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
-  * Surface energy budget should balance - Equation 2.102  Page 55:
+  * Surface energy budget should balance - Equation 2.102  Page 55
     * Sensible heat flux (Q_H), latent heat flux (Q_E) and ground heat flux (Q_G)
       should be positive with high solar radiation (Q_S)
-  * Recent local weather examples
-  * Examples from the literature
+  * Find recent local weather examples for comparison
+  * Find examples from the literature for comparison
 
 * Ground heat flux:
   * The ground heat flux equation should be approximately sinusoidal
+    * Although early results are approximately sinusoidal
   * See [section 3 in the MT23E lecture notes](http://www.met.reading.ac.uk/~swrhgnrj/teaching/MT23E/mt23e_notes.pdf)
     by [Robin Hogan](http://www.met.reading.ac.uk/~swrhgnrj/) for a simple sinusoidal equation
 
@@ -218,8 +226,6 @@ The plots are in order from left to right and top to bottom:
 * Improve documentation:
   * Add more usage examples
     * Illustrate the most important command line options
-  * Possibly add some illustrative plots
-    * Including one for each of the heat fluxes
 
 
 ## Contributing
