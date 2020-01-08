@@ -81,8 +81,8 @@ Equation and page numbers in the python code refer to
 [Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models](https://doi.org/10.1017/CBO9780511812590)
 by [David J. Stensrud](http://www.met.psu.edu/people/djs78).
 
-The script reproduces some of the results of [Luke Madaus](http://midlatitude.com/lukemadaus/),
-[Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html).
+The local hour of the sun approximation is from:
+[pveducation.org](https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time)
 
 ### Parameters
 
@@ -100,26 +100,39 @@ Included parameters:
 
   * Optional parameters:
 
-| Name                    | Short | Long              | Description                                   | Default |
-|-------------------------|-------|-------------------|-----------------------------------------------|---------|
-| Hour                    | -ho   | --hour            | Hour of day; 0 to 24                          | 12      |
-| Albedo                  | -al   | --albedo          | Albedo; 0 to 1                                | 0.3     |
-| Cloud fraction          | -cf   | --cloud_fraction  | Cloud fraction; 0 to 1                        | 0       |
-| Solstice                | -ds   | --day_of_solstice | Day of solstice; 172 or 173                   | 173     |
-| UTC offset              | -uo   | --utc_offset      | UTC offset in hours; -12 to 12                | 0       |
-| Forecast period         | -fp   | --forecast_period | Forecast period in seconds; 600 to 3600       | 3600    |
-| Transmissivity          | -tr   | --transmissivity  | Atmospheric transmissivity; greater than 0    | 0.8     |
-| Emissivity              | -em   | --emissivity      | Surface emissivity; 0.9 to 0.99               | 0.95    |
-| Bowen ratio             | -br   | --bowen_ratio     | Bowen ratio; -10 to 10                        | 0.9     |
-| Precipitable water      | -pw   | --precip_water    | Precipitable water in cm; greater than 0      | 1.0     |
-| Resistance to heat flux | -rh   | --resistance      | EXPERIMENTAL Resistance to heat flux (m s^-1) | 0       |
-| Help                    | -h    | --help            | Show this help message and exit               | N/A     |
-| Verbose                 | -v    | --verbose         | Print additional information                  | N/A     |
+| Name                               | Short | Long                  | Description                                                       | Default             |
+|------------------------------------|-------|-----------------------|-------------------------------------------------------------------|---------------------|
+| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                              | 12                  |
+| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                    | 0.3                 |
+| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                            | 0                   |
+| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                       | 173                 |
+| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                    | 0                   |
+| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                           | 3600                |
+| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                        | 0.8                 |
+| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                   | 0.95                |
+| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                            | 0.9                 |
+| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                          | 1.0                 |
+| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                     | 0                   |
+| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | Temperature of the base of the cloud adjustment (Kelvin)          | 0                   |
+| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant (Fahrenheit)        | Surface temperature |
+| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | Air temperature at 40 hPa above the surface adjustment (Kelvin)   | 0                   |
+| Atmospheric temperature constant   | -at   | --atmos_temp_constant | Air temperature at 40 hPa above the surface constant (Fahrenheit) | Surface temperature |
+| Help                               | -h    | --help                | Show this help message and exit                                   | N/A                 |
+| Verbose                            | -v    | --verbose             | Print additional information                                      | N/A                 |
+
+Note:
+ * Temperatures in Fahrenheit are converted to Kelvin in the script
+ * The cloud fraction and cloud base temperature options are largely untested
+ * Both the atmospheric and cloud temperatures default to the surface temperature value unless otherwise specified
+
+The atmospheric temperature adjustment equals the surface temperature plus/minus argument degrees Kelvin.
+Similarly for the cloud temperature adjustment.  These two options are intended to provide a simple method
+to vary these temperatures over a 24 hour period as shown in the comparison section below.  This simple
+approach is not suggested in the Parameterization Schemes book.
 
 Parameters to add:
   * Required:
-    * Support initial surface air temperature in Celsius
-    * Support gound reservoir temperature in Celsius
+    * Support temperatures in Celsius
 
 Constants used:
 **Note**: Strictly speaking some of these values are not constants; meaning constant values have been used as simpliying approximations.
@@ -140,31 +153,66 @@ Predictions from Luke Madaus
 [Digging into a "simple" weather model](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
 can be used for comparison with my implementation.
 
-Madaus does not provide any code and the explanation is terse.
-I suspect not all of the parameters involved have been listed.
-So, I would not expect identical results with Madaus.  The final
+Madaus does not provide source code and the explanation is terse.
+I suspect not all of the parameters involved nor necessary
+assumptions have been listed.  Also, I may have used a different
+local hour of the sun approximation and atmospheric temperature
+ajustment.  So, I would not expect identical results.  The final
 T_S plot below shows reasonable agreement between the Madaus
 predictions and mine for surface temperature
-(RMSE is approximately 3.2).  Madaus results are plotted in green.
-Anecdotally, the downwelling radiation (Q_Ld) seems low during
-the later hours.
+(RMSE is approximately 2.05).  Madaus results are plotted in green.
+Anecdotally, the downwelling radiation (Q_Ld) predictions seem low.
 
-<img src="figures/result.19.png" align="center" />
+<img src="figures/deopt.01.png" align="center" />
 
 The plots are in order from left to right and top to bottom:
 
-| Variable | Description                       |
-|----------|-----------------------------------|
-| Q_S      | Solar radiation                   |
-| Q_Ld     | Downwelling radiation             |
-| Q_Lu     | Upwelling radiation               |
-| N_R      | Net radiation (Q_S + Q_Ld - Q_Lu) |
-| Q_H      | Sensible heat flux                |
-| Q_E      | Latent heat flux                  |
-| Q_G      | Ground heat flux                  |
-| d_T_s    | Change in surface temperature     |
-| T_s      | Surface temperature               |
+| Variable     | Description                                  |
+|--------------|----------------------------------------------|
+| Q_S          | Solar radiation                              |
+| Q_Ld         | Downwelling radiation                        |
+| Q_Lu         | Upwelling radiation                          |
+| N_R          | Net radiation (Q_S + Q_Ld - Q_Lu)            |
+| Q_H          | Sensible heat flux                           |
+| Q_E          | Latent heat flux                             |
+| Q_G          | Ground heat flux                             |
+| d_T_s        | Change in surface temperature                |
+| T_s          | Surface temperature                          |
+| Error        | Difference between my predictions and Madaus |
+| Radiation    | Q_S (dotted) , Q_Ld, Q_Lu, N_R (dashed)      |
+| Surface flux | Q_H, Q_E, Q_G                                |
 
+To recreate the results above start with the following command line parameters:
+```sh
+python parametric_scheme.py -la 47.6928 -lo -122.3038                \
+                            -da 229 -ho 13                           \
+                            -gt 54 -st 72                            \
+                            -uo -8 -pw 1.27                          \
+                            -al 0.1147677                            \
+                            -em 0.7314196                            \
+                            -tr 0.7736024                            \
+                            -pr 0.3595031                            \
+                            -ta 12.2507737
+
+# The same using long options
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
+                            --day_of_year 229 --hour 13               \
+                            --ground_temp 54 --surface_temp 72        \
+                            --utc_offset -8 --precip_water 1.27       \
+                            --albedo 0.1147677                        \
+                            --emissivity 0.7314196                    \
+                            --transmissivity 0.7736024                \
+                            --percent_net_radiation 0.3595031         \
+                            --atmos_temp_adjust 12.2507737
+```
+The surface temperature prediction should then be used as the -st/--surface_temp
+argument and the -ho/--hour argument should be incremented by 1.
+
+The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmospheric_temp
+arguments used above were produced from an optimisation process over the full 24 hour
+forecast period.
+
+The default cloud fraction (0) and Bowen ratio (0.9) have been used.
 
 ### Limitations and assumptions
 
@@ -184,8 +232,6 @@ The plots are in order from left to right and top to bottom:
     * Results for non-zero cloud fraction are questionable:
       * Assumes temperature at the base of the cloud equals surface
         temperature which it certainly does not
-  * The ground heat flux equation is not sinusoidal:
-    * Although early results are approximately sinusoidal
   * Will not work over water
 
 
@@ -202,12 +248,6 @@ The plots are in order from left to right and top to bottom:
   * Find recent local weather examples for comparison
   * Find examples from the literature for comparison
 
-* Ground heat flux:
-  * The ground heat flux equation should be approximately sinusoidal
-    * Although early results are approximately sinusoidal
-  * See [section 3 in the MT23E lecture notes](http://www.met.reading.ac.uk/~swrhgnrj/teaching/MT23E/mt23e_notes.pdf)
-    by [Robin Hogan](http://www.met.reading.ac.uk/~swrhgnrj/) for a simple sinusoidal equation
-
 * Add unit tests:
   * Setup travis CI
   * Find range of test cases where surface temperature and all parameters are known
@@ -222,10 +262,6 @@ The plots are in order from left to right and top to bottom:
       * Currently accepting all positive values
     * Find reasonable upper and lower limits for ground and surface temperatures
       * Currently not using range checks for temperatures
-
-* Improve documentation:
-  * Add more usage examples
-    * Illustrate the most important command line options
 
 
 ## Contributing
@@ -246,10 +282,12 @@ Pull requests are welcome.  For major changes, please open an issue first to dis
   [heat flux](https://escomp.github.io/ctsm-docs/doc/build/html/tech_note/Fluxes/CLM50_Tech_Note_Fluxes.html#sensible-and-latent-heat-fluxes-for-non-vegetated-surfaces)
   calculations
 * Table 10.1 in [lecture 10 of AS547](https://atmos.washington.edu/~breth/classes/AS547/lect/lect10.pdf)
-  from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives albedo and emmissivity values for
+  from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives albedo and emissivity values for
   a range of natural surfaces
 * [Radiation balance](http://www.indiana.edu/~geog109/topics/04_radiation/4c-RadiationBalance_nf.pdf)
   is discussed by Constance Brown on the G109 course
+* [Local hour of the sun approximation](https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time)
+  from [pveducation.org](https://www.pveducation.org/)
 
 
 ## License
