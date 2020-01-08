@@ -105,10 +105,29 @@ def downwelling_rad(args):
 
     b   = args.cloud_fraction  # Cloud fraction
     e_g = args.emissivity      # Surface emissivity
-    T_a = f_to_k(args.surface_temp)  # Temperature at 40 hPa above the ground surface
-    T_c = f_to_k(args.surface_temp)  # Temperature at the base of the cloud
-    # NOTE Assuming T_a equals surface_temp which it very definitely does not
-    # NOTE Assuming T_c equals surface_temp which it very definitely does not
+
+    # This command line argument models temperature at 40 hPa above the ground surface
+    # Atmospheric temperature constant or adjustment or surface temperature:
+    #   Adjustment - surface temperature +/- argument
+    #   Constant   - constant value
+    if args.atmos_temp_constant is not None:
+        T_a = f_to_k(args.atmos_temp_constant)
+    elif args.atmos_temp_adjust is not None:
+        T_a = f_to_k(args.surface_temp) + args.atmos_temp_adjust
+    else:
+        T_a = f_to_k(args.surface_temp)
+
+    # This command line argument models temperature at the base of the cloud
+    # Irrelevant if cloud fraction is 0
+    # Cloud base temperature constant or adjustment or surface temperature:
+    #   Adjustment - surface temperature +/- argument
+    #   Constant   - constant value
+    if args.cloud_temp_constant is not None:
+        T_c = f_to_k(args.cloud_temp_constant)
+    elif args.cloud_temp_adjust is not None:
+        T_c = f_to_k(args.surface_temp) + args.cloud_temp_adjust
+    else:
+        T_c = f_to_k(args.surface_temp)
 
     e_a = atmospheric_emissivity(args)
 
@@ -361,7 +380,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             description="Calculate surface temperature at latitude and longitude https://github.com/makeyourownmaker/ParametricWeatherModel")
-    optional = parser._action_groups.pop()
+
     required = parser.add_argument_group('required arguments')
     required.add_argument('-la', '--latitude',
             help='Latitude (-90 to 90; plus for north, minus for south)',
@@ -382,6 +401,7 @@ if __name__ == '__main__':
             help='Percent net radiation',
             required=True, type=float_range(0, 1), metavar="[0, 1]")
 
+    optional = parser._action_groups.pop()
     optional.add_argument('-v',  '--verbose',
             help='Print additional information',
             default=True, action="store_false")
@@ -418,6 +438,22 @@ if __name__ == '__main__':
     optional.add_argument('-rh', '--resistance',
             help='EXPERIMENTAL: Resistance to heat flux (greater than 0)',
             default=0, type=float_range(0, None), metavar="[0, None]")
+
+    mutex1 = parser.add_mutually_exclusive_group()
+    mutex1.add_argument('-at', '--atmos_temp_constant',
+            help='Atmospheric temperature at 40 hPa adjustment (Fahrenheit only) constant value',
+            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+    mutex1.add_argument('-ta', '--atmos_temp_adjust',
+            help='Atmospheric temperature at 40 hPa (Kelvin only) surface temperature plus/minus adjustment value default=0',
+            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+
+    mutex2 = parser.add_mutually_exclusive_group()
+    mutex2.add_argument('-ct', '--cloud_temp_constant',
+            help='Temperature of the base of the cloud (Fahrenheit only) constant value',
+            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+    mutex2.add_argument('-tc', '--cloud_temp_adjust',
+            help='Temperature of the base of the cloud (Kelvin only) surface temperature plus/minus adjustment value default=0',
+            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
