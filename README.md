@@ -293,6 +293,9 @@ Pull requests are welcome.  For major changes, please open an issue first to dis
 * [Local hour of the sun approximation](https://www.pveducation.org/pvcdrom/properties-of-sunlight/solar-time)
   from [pveducation.org](https://www.pveducation.org/)
 
+* My related weather repositories:
+  * [Cambridge Temperature Forecasts](https://github.com/makeyourownmaker/CambridgeTemperatureModel)
+  * [Cambridge University Computer Laboratory Weather Station R Shiny Web App](https://github.com/makeyourownmaker/ComLabWeatherShiny)
 
 ## License
 [GPL-2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
