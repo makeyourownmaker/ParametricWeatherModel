@@ -22,6 +22,7 @@ issue if you find a problem.
 Predict surface temperature at specified latitude, longitude, day of year,
 ground temperature and initial surface temperature:
 ```sh
+# Using short options
 python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2
 
 # The same using long options
@@ -71,6 +72,7 @@ There are two options for calculating the sensible heat flux:
 
 To use the experimental method the percent of net radiation must be set to 0:
 ```sh
+# Using short options
 python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000
 
 # The same using long options
@@ -135,6 +137,7 @@ Parameters to add:
     * Support temperatures in Celsius
 
 Constants used:
+
 **Note**: Strictly speaking some of these values are not constants; meaning constant values have been used as simpliying approximations.
 
 | Constant                                     | Value           | Unit             | Simpliying approximation |
@@ -184,6 +187,7 @@ The plots are in order from left to right and top to bottom:
 
 To recreate the results above start with the following command line parameters:
 ```sh
+# Using short options
 python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -da 229 -ho 13                           \
                             -gt 54 -st 72                            \
