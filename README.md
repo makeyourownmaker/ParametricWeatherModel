@@ -267,6 +267,10 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
     * Find reasonable upper and lower limits for ground and surface temperatures
       * Currently not using range checks for temperatures
 
+* Sensitivity analysis:
+  * It would be interesting (but possibly overkill) to look at
+    [how uncertainty in the inputs affects the model predictions](https://en.wikipedia.org/wiki/Sensitivity_analysis)
+
 
 ## Contributing
 
