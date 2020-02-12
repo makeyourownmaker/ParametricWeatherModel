@@ -9,6 +9,8 @@
 ParametricWeatherModel is a repository for forecasting surface temperature
 based primarily on latitude, longitude, day of year and hour of day.
 
+If you like ParametricWeatherModel, give it a star, or fork it and contribute!
+
 
 ## Development Stage
 
