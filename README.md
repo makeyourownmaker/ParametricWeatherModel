@@ -268,6 +268,10 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
       * Currently accepting all positive values
     * Find reasonable upper and lower limits for ground and surface temperatures
       * Currently not using range checks for temperatures
+  * Add output to CSV file
+    * For default and verbose modes
+    * Create file if it does not exist
+    * Append to file if it already exists
 
 * Sensitivity analysis:
   * It would be interesting (but possibly overkill) to look at
