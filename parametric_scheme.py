@@ -106,6 +106,7 @@ def downwelling_rad(args):
     b   = args.cloud_fraction  # Cloud fraction
     e_g = args.emissivity      # Surface emissivity
 
+    # EXPERIMENTAL
     # This command line argument models temperature at 40 hPa above the ground surface
     # Atmospheric temperature constant or adjustment or surface temperature:
     #   Adjustment - surface temperature +/- argument
@@ -113,10 +114,11 @@ def downwelling_rad(args):
     if args.atmos_temp_constant is not None:
         T_a = f_to_k(args.atmos_temp_constant)
     elif args.atmos_temp_adjust is not None:
-        T_a = f_to_k(args.surface_temp) + args.atmos_temp_adjust
+        T_a = args.surface_temp + args.atmos_temp_adjust
     else:
-        T_a = f_to_k(args.surface_temp)
+        T_a = args.surface_temp
 
+    # EXPERIMENTAL
     # This command line argument models temperature at the base of the cloud
     # Irrelevant if cloud fraction is 0
     # Cloud base temperature constant or adjustment or surface temperature:
@@ -125,9 +127,9 @@ def downwelling_rad(args):
     if args.cloud_temp_constant is not None:
         T_c = f_to_k(args.cloud_temp_constant)
     elif args.cloud_temp_adjust is not None:
-        T_c = f_to_k(args.surface_temp) + args.cloud_temp_adjust
+        T_c = args.surface_temp + args.cloud_temp_adjust
     else:
-        T_c = f_to_k(args.surface_temp)
+        T_c = args.surface_temp
 
     e_a = atmospheric_emissivity(args)
 
@@ -148,7 +150,7 @@ def upwelling_rad(args):
     sigma = 5.67 * 10**(-8)  # W m^-2 K^-4 - Stefan-Boltzmann constant
 
     e_g = args.emissivity  # Surface emissivity
-    T_g = f_to_k(args.ground_temp)
+    T_g = args.ground_temp
 
     # Equation 2.5  Page 25
     Q_Lu = e_g * sigma * T_g**4
@@ -176,8 +178,8 @@ def sensible_heat_flux(args, N_R):
         Q_H = pc_nr * N_R
     elif r_H != 0:
         # EXPERIMENTAL  Based on Equation 2.23  Page 31
-        T_g = f_to_k(args.ground_temp)
-        T_s = f_to_k(args.surface_temp)
+        T_g = args.ground_temp
+        T_s = args.surface_temp
         Q_H = rho * c_p * (T_g - T_s) / r_H
     else:
         exit("Error!\nEither 'percent net radiation' or 'resistance to heat flux' must be non-zero.\n")
@@ -208,8 +210,8 @@ def ground_heat_flux(args):
     # "Constants"
     K = 11  # J m^-2 K^-1 s^-1 - Thermal diffusivity of air
 
-    T_g = f_to_k(args.ground_temp)   # K - Ground reservoir temperature
-    T_s = f_to_k(args.surface_temp)  # K - Surface air temperature
+    T_g = args.ground_temp   # K - Ground reservoir temperature
+    T_s = args.surface_temp  # K - Surface air temperature
 
     # Based on last term in only equation in question 6  Page 61
     Q_G = K * (T_s - T_g)
@@ -351,6 +353,13 @@ def main(args):
     c_g = 1.4 * 10**5  # J m^-2 K^-1 - Soil heat capacity
     d_t = 1
 
+    if args.degrees.upper() == 'C':
+        args.ground_temp  = c_to_k(args.ground_temp)
+        args.surface_temp = c_to_k(args.surface_temp)
+    elif args.degrees.upper() == 'F':
+        args.ground_temp  = f_to_k(args.ground_temp)
+        args.surface_temp = f_to_k(args.surface_temp)
+
     for i in range(0, args.forecast_period, d_t):
         Q_S  = solar_rad(args)                # Incoming solar radiation
         Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
@@ -365,9 +374,12 @@ def main(args):
         d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
         print_v("d_T_s:\t", d_T_s)  # , "K")
 
-        args.surface_temp = k_to_f(f_to_k(args.surface_temp) + d_T_s)
+    if args.degrees.upper() == 'C':
+        T_s = k_to_c(args.surface_temp + d_T_s)
+    elif args.degrees.upper() == 'F':
+        T_s = k_to_f(args.surface_temp + d_T_s)
 
-    print("T_s:\t", args.surface_temp)  # , "F")
+    print("T_s:\t", T_s)  # , "F")
 
     return 0
 
@@ -392,11 +404,14 @@ if __name__ == '__main__':
             help='Julian day of year',
             required=True, type=int_range(0, 365), metavar="[1, 365]")
     required.add_argument('-gt', '--ground_temp',
-            help='Ground reservoir temperature (Fahrenheit only)',
+            help='Ground reservoir temperature (Fahrenheit or Celsius)',
             type=float)
     required.add_argument('-st', '--surface_temp',
-            help='Initial surface air temperature (Fahrenheit only)',
+            help='Initial surface air temperature (Fahrenheit or Celsius)',
             type=float)
+    required.add_argument('-de', '--degrees',
+            help='Specify ground and surface temperature in Celsius or Fahrenheit (C, c, F, f only)',
+            required=True, type=str, choices=['C', 'F', 'c', 'f'])
     required.add_argument('-pr', '--percent_net_radiation',
             help='Percent net radiation',
             required=True, type=float_range(0, 1), metavar="[0, 1]")
@@ -441,18 +456,18 @@ if __name__ == '__main__':
 
     mutex1 = parser.add_mutually_exclusive_group()
     mutex1.add_argument('-at', '--atmos_temp_constant',
-            help='Atmospheric temperature at 40 hPa adjustment (Fahrenheit only) constant value',
+            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa adjustment (Fahrenheit only) constant value',
             nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     mutex1.add_argument('-ta', '--atmos_temp_adjust',
-            help='Atmospheric temperature at 40 hPa (Kelvin only) surface temperature plus/minus adjustment value default=0',
+            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa (Kelvin only) surface temperature plus/minus adjustment value default=0',
             nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
 
     mutex2 = parser.add_mutually_exclusive_group()
     mutex2.add_argument('-ct', '--cloud_temp_constant',
-            help='Temperature of the base of the cloud (Fahrenheit only) constant value',
+            help='EXPERIMENTAL: Temperature of the base of the cloud (Fahrenheit only) constant value',
             nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     mutex2.add_argument('-tc', '--cloud_temp_adjust',
-            help='Temperature of the base of the cloud (Kelvin only) surface temperature plus/minus adjustment value default=0',
+            help='EXPERIMENTAL: Temperature of the base of the cloud (Kelvin only) surface temperature plus/minus adjustment value default=0',
             nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
 
     parser._action_groups.append(optional)

@@ -93,14 +93,14 @@ The local hour of the sun approximation is from:
 Included parameters:
   * Required:
 
-| Name                  | Short | Long                    | Description                                  | Default |
-|-----------------------|-------|-------------------------|----------------------------------------------|---------|
-| Latitude              | -la   | --latitude              | -90 to 90; plus for north, minus for south   | N/A     |
-| Longitude             | -lo   | --longitude             | -180 to 180; plus for east, minus for west   | N/A     |
-| Day                   | -da   | --day_of_year           | Julian day of year; 1 to 365                 | N/A     |
-| Surface temperature   | -st   | --surface_temp          | Initial surface air temperature (Fahrenheit) | N/A     |
-| Ground temperature    | -gt   | --ground_temp           | Ground reservoir temperature (Fahrenheit)    | N/A     |
-| Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)               | N/A     |
+| Name                  | Short | Long                    | Description                                | Default |
+|-----------------------|-------|-------------------------|--------------------------------------------|---------|
+| Latitude              | -la   | --latitude              | -90 to 90; plus for north, minus for south | N/A     |
+| Longitude             | -lo   | --longitude             | -180 to 180; plus for east, minus for west | N/A     |
+| Day                   | -da   | --day_of_year           | Julian day of year; 1 to 365               | N/A     |
+| Surface temperature   | -st   | --surface_temp          | Initial surface air temperature (F or C)   | N/A     |
+| Ground temperature    | -gt   | --ground_temp           | Ground reservoir temperature (F or C)      | N/A     |
+| Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)             | N/A     |
 
   * Optional parameters:
 
@@ -134,9 +134,6 @@ Similarly for the cloud temperature adjustment.  These two options are intended 
 to vary these temperatures over a 24 hour period as shown in the comparison section below.  This simple
 approach is not suggested in the Parameterization Schemes book.
 
-Parameters to add:
-  * Required:
-    * Support temperatures in Celsius
 
 Constants used:
 
@@ -198,7 +195,8 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -em 0.7314196                            \
                             -tr 0.7736024                            \
                             -pr 0.3595031                            \
-                            -ta 12.2507737
+                            -ta 12.2507737                           \
+                            -de F
 
 # The same using long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
@@ -209,7 +207,8 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --emissivity 0.7314196                    \
                             --transmissivity 0.7736024                \
                             --percent_net_radiation 0.3595031         \
-                            --atmos_temp_adjust 12.2507737
+                            --atmos_temp_adjust 12.2507737            \
+                            --degrees F
 ```
 The surface temperature prediction should then be used as the -st/--surface_temp
 argument and the -ho/--hour argument should be incremented by 1.
@@ -262,7 +261,6 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
   * What is an acceptable prediction interval?
 
 * Improve command line options:
-  * Support ground reservoir and surface temperatures in Celsius
   * Improve argparse range checks:
     * Find reasonable upper limits for precipitable water and transmissivity values
       * Currently accepting all positive values
