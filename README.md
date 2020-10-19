@@ -104,25 +104,25 @@ Included parameters:
 
   * Optional parameters:
 
-| Name                               | Short | Long                  | Description                                                       | Default             |
-|------------------------------------|-------|-----------------------|-------------------------------------------------------------------|---------------------|
-| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                              | 12                  |
-| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                    | 0.3                 |
-| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                            | 0                   |
-| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                       | 173                 |
-| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                    | 0                   |
-| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                           | 3600                |
-| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                        | 0.8                 |
-| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                   | 0.95                |
-| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                            | 0.9                 |
-| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                          | 1.0                 |
-| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                     | 0                   |
-| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | Temperature of the base of the cloud adjustment (Kelvin)          | 0                   |
-| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant (Fahrenheit)        | Surface temperature |
-| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | Air temperature at 40 hPa above the surface adjustment (Kelvin)   | 0                   |
-| Atmospheric temperature constant   | -at   | --atmos_temp_constant | Air temperature at 40 hPa above the surface constant (Fahrenheit) | Surface temperature |
-| Help                               | -h    | --help                | Show this help message and exit                                   | N/A                 |
-| Verbose                            | -v    | --verbose             | Print additional information                                      | N/A                 |
+| Name                               | Short | Long                  | Description                                                                    | Default             |
+|------------------------------------|-------|-----------------------|--------------------------------------------------------------------------------|---------------------|
+| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                                           | 12                  |
+| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                                 | 0.3                 |
+| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                                         | 0                   |
+| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                                    | 173                 |
+| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                                 | 0                   |
+| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                                        | 3600                |
+| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                                     | 0.8                 |
+| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                                | 0.95                |
+| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                                         | 0.9                 |
+| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                                       | 1.0                 |
+| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                                  | 0                   |
+| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment (Kelvin)          | 0                   |
+| Cloud temperature constant         | -ct   | --cloud_temp_constant | EXPERIMENTAL Temperature of the base of the cloud constant (Fahrenheit)        | Surface temperature |
+| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment (Kelvin)   | 0                   |
+| Atmospheric temperature constant   | -at   | --atmos_temp_constant | EXPERIMENTAL Air temperature at 40 hPa above the surface constant (Fahrenheit) | Surface temperature |
+| Help                               | -h    | --help                | Show this help message and exit                                                | N/A                 |
+| Verbose                            | -v    | --verbose             | Print additional information                                                   | N/A                 |
 
 Note:
  * Temperatures in Fahrenheit are converted to Kelvin in the script
