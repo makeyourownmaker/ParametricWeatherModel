@@ -121,6 +121,7 @@ Included parameters:
 | Cloud temperature constant         | -ct   | --cloud_temp_constant | EXPERIMENTAL Temperature of the base of the cloud constant (Fahrenheit)        | Surface temperature |
 | Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment (Kelvin)   | 0                   |
 | Atmospheric temperature constant   | -at   | --atmos_temp_constant | EXPERIMENTAL Air temperature at 40 hPa above the surface constant (Fahrenheit) | Surface temperature |
+| File name                          | -fn   | --filename            | File name for comma separated value output                                     | N/A                 |
 | Help                               | -h    | --help                | Show this help message and exit                                                | N/A                 |
 | Verbose                            | -v    | --verbose             | Print additional information                                                   | N/A                 |
 
@@ -266,10 +267,6 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
       * Currently accepting all positive values
     * Find reasonable upper and lower limits for ground and surface temperatures
       * Currently not using range checks for temperatures
-  * Add output to CSV file
-    * For default and verbose modes
-    * Create file if it does not exist
-    * Append to file if it already exists
 
 * Sensitivity analysis:
   * It would be interesting (but possibly overkill) to look at

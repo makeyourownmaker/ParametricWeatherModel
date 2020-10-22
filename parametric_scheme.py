@@ -2,6 +2,7 @@
 from __future__ import (division, print_function, absolute_import,
                         unicode_literals)
 
+import os
 import math
 import argparse
 import datetime
@@ -381,6 +382,20 @@ def main(args):
 
     print("T_s:\t", T_s)  # , "F")
 
+    line = str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
+    line = line + "\t" + str(Q_E) + "\t" + str(Q_G) + "\t" + str(d_T_s)
+    line = line + "\t" + str(T_s) + "\n"
+
+    header = False
+    if not os.path.exists(args.filename) or os.stat(args.filename).st_size == 0:
+        header = True
+
+    with open(args.filename, 'a+') as f:
+        if header is True:
+            f.write("Q_S\tQ_Ld\tQ_Lu\tQ_H\tQ_E\tQ_G\td_T_s\tT_s\n")
+        f.write(line)
+    f.close()
+
     return 0
 
 
@@ -450,6 +465,8 @@ if __name__ == '__main__':
     optional.add_argument('-br', '--bowen_ratio',
             help='Bowen ratio - default=0.9',
             default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
+    optional.add_argument('-fn', '--filename',
+            help='File name for comman seperated value output', type=str)
     optional.add_argument('-rh', '--resistance',
             help='EXPERIMENTAL: Resistance to heat flux (greater than 0)',
             default=0, type=float_range(0, None), metavar="[0, None]")
