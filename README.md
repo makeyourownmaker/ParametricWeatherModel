@@ -58,7 +58,8 @@ According to [wikipedia](https://en.wikipedia.org/wiki/Parametrization_(atmosphe
 A parameterization scheme "in a weather or climate model in the context of
 numerical weather prediction is a method of replacing processes that are too
 small-scale or complex to be physically represented in the model by a
-simplified process."
+simplified process."  The obvious risk with this approach is producing an
+over-determined model.
 
 The python code models the following radiative processes:
   * Incoming solar radiation
@@ -164,6 +165,8 @@ ajustment.  So, I would not expect identical results.  The final
 T_S plot below shows reasonable agreement between the Madaus
 predictions and mine for surface temperature
 (RMSE is approximately 2.05).  Madaus results are plotted in green.
+I am not a meteorologist, so I am not certain all the results are
+reasonable.
 Anecdotally, the downwelling radiation (Q_Ld) predictions seem low.
 
 <img src="figures/deopt.01.png" align="center" />
@@ -216,9 +219,27 @@ argument and the -ho/--hour argument should be incremented by 1.
 
 The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmospheric_temp
 arguments used above were produced from an optimisation process over the full 24 hour
-forecast period.
+forecast period.  I am not a meteorologist, so I am not certain these values are reasonable.
 
 The default cloud fraction (0) and Bowen ratio (0.9) have been used.
+
+### CSV output
+
+The --fn and --filename options specify a file to output the following variables
+to:
+
+| Variable     | Description                                  |
+|--------------|----------------------------------------------|
+| Q_S          | Solar radiation                              |
+| Q_Ld         | Downwelling radiation                        |
+| Q_Lu         | Upwelling radiation                          |
+| Q_H          | Sensible heat flux                           |
+| Q_E          | Latent heat flux                             |
+| Q_G          | Ground heat flux                             |
+| d_T_s        | Change in surface temperature                |
+| T_s          | Surface temperature                          |
+
+These variables are separated by tabs.
 
 ### Limitations and assumptions
 
@@ -238,7 +259,7 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
     * Results for non-zero cloud fraction are questionable:
       * Assumes temperature at the base of the cloud equals surface
         temperature which it certainly does not
-  * Will not work over water
+  * Will not work over water, snow ...
 
 
 ## Roadmap
