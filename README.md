@@ -130,6 +130,9 @@ Note:
  * Temperatures in Fahrenheit are converted to Kelvin in the script
  * The cloud fraction and cloud base temperature options are largely untested
  * Both the atmospheric and cloud temperatures default to the surface temperature value unless otherwise specified
+ * Ground and surface temperature range checks start at -150 F and end at 150 F
+   * This wide range of input values may not be compatible with all the parameterization scheme assumptions
+   * This range still applies if temperatures are specified in Celsius
 
 The atmospheric temperature adjustment equals the surface temperature plus/minus argument degrees Kelvin.
 Similarly for the cloud temperature adjustment.  These two options are intended to provide a simple method
@@ -259,6 +262,8 @@ These variables are separated by tabs.
     * Results for non-zero cloud fraction are questionable:
       * Assumes temperature at the base of the cloud equals surface
         temperature which it certainly does not
+  * Ground and surface temperature range checks start at -150 F and end at 150 F
+    * This wide range of input values may not be compatible with all the parameterization scheme assumptions
   * Will not work over water, snow ...
 
 
@@ -286,8 +291,9 @@ These variables are separated by tabs.
   * Improve argparse range checks:
     * Find reasonable upper limits for precipitable water and transmissivity values
       * Currently accepting all positive values
-    * Find reasonable upper and lower limits for ground and surface temperatures
-      * Currently not using range checks for temperatures
+    * Ground and surface temperature range checks start at -150 F and end at 150 F
+      * This range still applies if temperatures are specified in Celsius
+      * A reduced range should be applied in the Celsius case (-100 C to 60 C)
 
 * Sensitivity analysis:
   * It would be interesting (but possibly overkill) to look at
