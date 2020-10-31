@@ -222,7 +222,10 @@ argument and the -ho/--hour argument should be incremented by 1.
 
 The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmospheric_temp
 arguments used above were produced from an optimisation process over the full 24 hour
-forecast period.  I am not a meteorologist, so I am not certain these values are reasonable.
+forecast period.  The optimisation process minimised temperature difference with Madaus
+predictions.  A multi-objective optimisation process considering also some of the
+radiative processes may give improved results.
+I am not a meteorologist, so I am not certain this combination of values is reasonable.
 
 The default cloud fraction (0) and Bowen ratio (0.9) have been used.
 
@@ -231,16 +234,16 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
 The --fn and --filename options specify a file to output the following variables
 to:
 
-| Variable     | Description                                  |
-|--------------|----------------------------------------------|
-| Q_S          | Solar radiation                              |
-| Q_Ld         | Downwelling radiation                        |
-| Q_Lu         | Upwelling radiation                          |
-| Q_H          | Sensible heat flux                           |
-| Q_E          | Latent heat flux                             |
-| Q_G          | Ground heat flux                             |
-| d_T_s        | Change in surface temperature                |
-| T_s          | Surface temperature                          |
+| Variable | Description                   |
+|----------|-------------------------------|
+| Q_S      | Solar radiation               |
+| Q_Ld     | Downwelling radiation         |
+| Q_Lu     | Upwelling radiation           |
+| Q_H      | Sensible heat flux            |
+| Q_E      | Latent heat flux              |
+| Q_G      | Ground heat flux              |
+| d_T_s    | Change in surface temperature |
+| T_s      | Surface temperature           |
 
 These variables are separated by tabs.
 
