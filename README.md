@@ -223,8 +223,8 @@ argument and the -ho/--hour argument should be incremented by 1.
 The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmospheric_temp
 arguments used above were produced from an optimisation process over the full 24 hour
 forecast period.  The optimisation process minimised temperature difference with Madaus
-predictions.  A multi-objective optimisation process considering also some of the
-radiative processes may give improved results.
+predictions.  A multi-objective optimisation process, considering also some of the
+radiative processes, may give more realistic results.
 I am not a meteorologist, so I am not certain this combination of values is reasonable.
 
 The default cloud fraction (0) and Bowen ratio (0.9) have been used.
