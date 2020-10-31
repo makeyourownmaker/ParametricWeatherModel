@@ -420,10 +420,10 @@ if __name__ == '__main__':
             required=True, type=int_range(0, 365), metavar="[1, 365]")
     required.add_argument('-gt', '--ground_temp',
             help='Ground reservoir temperature (Fahrenheit or Celsius)',
-            type=float)
+            default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit or Celsius)',
-            type=float)
+            default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     required.add_argument('-de', '--degrees',
             help='Specify ground and surface temperature in Celsius or Fahrenheit (C, c, F, f only)',
             required=True, type=str, choices=['C', 'F', 'c', 'f'])
