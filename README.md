@@ -272,7 +272,7 @@ These variables are separated by tabs.
 
 ## Roadmap
 
-* Sanity checks:
+* Perform sanity checks:
   * Starting with [Luke Madaus examples](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
     * Check if downwelling radiation is too low in the later hours
   * Sensible heat flux increases during morning reaching a maximum in the
@@ -292,13 +292,16 @@ These variables are separated by tabs.
 
 * Improve command line options:
   * Improve argparse range checks:
-    * Find reasonable upper limits for precipitable water and transmissivity values
+    * Find reasonable upper limits for transmissivity values
       * Currently accepting all positive values
     * Ground and surface temperature range checks start at -150 F and end at 150 F
       * This range still applies if temperatures are specified in Celsius
       * A reduced range should be applied in the Celsius case (-100 C to 60 C)
 
-* Sensitivity analysis:
+* Expand documentation:
+  * Justify values used in command line argument range checks
+
+* Explore sensitivity analysis:
   * It would be interesting (but possibly overkill) to look at
     [how uncertainty in the inputs affects the model predictions](https://en.wikipedia.org/wiki/Sensitivity_analysis)
 
