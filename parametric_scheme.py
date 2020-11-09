@@ -454,19 +454,19 @@ if __name__ == '__main__':
             help='Forecast period in seconds - default=3600',
             default=3600, type=int_range(600, 3601), metavar="[600, 3600]")
     optional.add_argument('-tr', '--transmissivity',
-            help='Atmospheric transmissivity (greater than 0) default=0.8',
+            help='Atmospheric transmissivity - default=0.8',
             default=0.8, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-em', '--emissivity',
             help='Surface emissivity - default=0.9',
             default=0.9, type=float_range(0.7, 0.99), metavar="[0.7, 0.99]")
     optional.add_argument('-pw', '--precip_water',
-            help='Precipitable water in cm (greater than 0) default=1',
+            help='Precipitable water in cm - default=1',
             default=1, type=float_range(0.0, 7.5), metavar="[0.0, 7.5]")
     optional.add_argument('-br', '--bowen_ratio',
             help='Bowen ratio - default=0.9',
             default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
     optional.add_argument('-fn', '--filename',
-            help='File name for comman seperated value output', type=str)
+            help='File name for CSV output', type=str)
     optional.add_argument('-rh', '--resistance',
             help='EXPERIMENTAL: Resistance to heat flux (greater than 0)',
             default=0, type=float_range(0, None), metavar="[0, None]")
