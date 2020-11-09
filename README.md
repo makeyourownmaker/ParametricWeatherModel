@@ -292,8 +292,6 @@ These variables are separated by tabs.
 
 * Improve command line options:
   * Improve argparse range checks:
-    * Find reasonable upper limits for transmissivity values
-      * Currently accepting all positive values
     * Ground and surface temperature range checks start at -150 F and end at 150 F
       * This range still applies if temperatures are specified in Celsius
       * A reduced range should be applied in the Celsius case (-100 C to 60 C)
