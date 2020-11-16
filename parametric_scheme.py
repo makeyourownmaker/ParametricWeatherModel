@@ -58,21 +58,6 @@ def temp_range(temp, degrees):
     return 0
 
 
-# class TempRange(argparse.Action):
-#    def __call__(self, parser, namespace, values, option_string=None):
-#        degrees = getattr(namespace, 'degrees')
-#        print(degrees)
-#        print('%r %r %r' % (namespace, values, option_string))
-#        exit()
-#
-#        if (values < -150.0 or values > 150.0) and (degrees == 'F' or degrees == 'f'):
-#            raise argparse.ArgumentError(self, "temperatures must be between -150 and 150 F")
-#        elif (values < -100.0 or values > 66.0) and (degrees == 'C' or degrees == 'c'):
-#            raise argparse.ArgumentError(self, "temperatures must be between -100 and 66 C")
-#
-#        setattr(namespace, self.dest, values)
-
-
 def f_to_k(f):
     '''
     Convert Fahrenheit to Kelvin
@@ -448,17 +433,14 @@ if __name__ == '__main__':
     required.add_argument('-da', '--day_of_year',
             help='Julian day of year',
             required=True, type=int_range(0, 365), metavar="[1, 365]")
+    # ground_temp validation using temp_range after parse_args()
     required.add_argument('-gt', '--ground_temp',
             help='Ground reservoir temperature (Fahrenheit or Celsius)',
             default=None, type=float)
-    #        default=None, type=float_range(-150, 150), metavar="[-150, 150]")
-    # required.add_argument('-gt', '--ground_temp',
-    #        help='Ground reservoir temperature (Fahrenheit or Celsius)',
-    #        default=None, type=float, action=TempRange)
+    # surface_temp validation using temp_range after parse_args()
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit or Celsius)',
             default=None, type=float)
-    #        default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     required.add_argument('-de', '--degrees',
             help='Specify ground and surface temperature in Celsius or Fahrenheit (C, c, F or f)',
             required=True, type=str, choices=['C', 'F', 'c', 'f'])
