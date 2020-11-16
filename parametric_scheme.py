@@ -44,6 +44,35 @@ def int_range(min=None, max=None):
     return check_range
 
 
+# NOTE: Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
+#       because degrees returned None instead of F or C (when using getattr)
+#       Possibly because parse_args() not yet ran
+def temp_range(temp, degrees):
+    if (temp < -150.0 or temp > 150.0) and (degrees == 'F' or degrees == 'f'):
+        print("Fahrenheit temperatures must be between -150 and 150 F")
+        exit()
+    elif (temp < -100.0 or temp > 66.0) and (degrees == 'C' or degrees == 'c'):
+        print("Celsius temperatures must be between -100 and 66 C")
+        exit()
+
+    return 0
+
+
+# class TempRange(argparse.Action):
+#    def __call__(self, parser, namespace, values, option_string=None):
+#        degrees = getattr(namespace, 'degrees')
+#        print(degrees)
+#        print('%r %r %r' % (namespace, values, option_string))
+#        exit()
+#
+#        if (values < -150.0 or values > 150.0) and (degrees == 'F' or degrees == 'f'):
+#            raise argparse.ArgumentError(self, "temperatures must be between -150 and 150 F")
+#        elif (values < -100.0 or values > 66.0) and (degrees == 'C' or degrees == 'c'):
+#            raise argparse.ArgumentError(self, "temperatures must be between -100 and 66 C")
+#
+#        setattr(namespace, self.dest, values)
+
+
 def f_to_k(f):
     '''
     Convert Fahrenheit to Kelvin
@@ -382,19 +411,20 @@ def main(args):
 
     print("T_s:\t", T_s)  # , "F")
 
-    line = str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
-    line = line + "\t" + str(Q_E) + "\t" + str(Q_G) + "\t" + str(d_T_s)
-    line = line + "\t" + str(T_s) + "\n"
+    if args.filename is not None:
+        line = str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
+        line = line + "\t" + str(Q_E) + "\t" + str(Q_G) + "\t" + str(d_T_s)
+        line = line + "\t" + str(T_s) + "\n"
 
-    header = False
-    if not os.path.exists(args.filename) or os.stat(args.filename).st_size == 0:
-        header = True
+        header = False
+        if not os.path.exists(args.filename) or os.stat(args.filename).st_size == 0:
+            header = True
 
-    with open(args.filename, 'a+') as f:
-        if header is True:
-            f.write("Q_S\tQ_Ld\tQ_Lu\tQ_H\tQ_E\tQ_G\td_T_s\tT_s\n")
-        f.write(line)
-    f.close()
+        with open(args.filename, 'a+') as f:
+            if header is True:
+                f.write("Q_S\tQ_Ld\tQ_Lu\tQ_H\tQ_E\tQ_G\td_T_s\tT_s\n")
+            f.write(line)
+        f.close()
 
     return 0
 
@@ -420,12 +450,17 @@ if __name__ == '__main__':
             required=True, type=int_range(0, 365), metavar="[1, 365]")
     required.add_argument('-gt', '--ground_temp',
             help='Ground reservoir temperature (Fahrenheit or Celsius)',
-            default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            default=None, type=float)
+    #        default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+    # required.add_argument('-gt', '--ground_temp',
+    #        help='Ground reservoir temperature (Fahrenheit or Celsius)',
+    #        default=None, type=float, action=TempRange)
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit or Celsius)',
-            default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            default=None, type=float)
+    #        default=None, type=float_range(-150, 150), metavar="[-150, 150]")
     required.add_argument('-de', '--degrees',
-            help='Specify ground and surface temperature in Celsius or Fahrenheit (C, c, F, f only)',
+            help='Specify ground and surface temperature in Celsius or Fahrenheit (C, c, F or f)',
             required=True, type=str, choices=['C', 'F', 'c', 'f'])
     required.add_argument('-pr', '--percent_net_radiation',
             help='Percent net radiation',
@@ -489,6 +524,9 @@ if __name__ == '__main__':
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
+
+    temp_range(args.ground_temp,  args.degrees)
+    temp_range(args.surface_temp, args.degrees)
 
     print_v = print if args.verbose else lambda *a, **k: None
 
