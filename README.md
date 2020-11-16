@@ -292,9 +292,7 @@ These variables are separated by tabs.
 
 * Improve command line options:
   * Improve argparse range checks:
-    * Ground and surface temperature range checks start at -150 F and end at 150 F
-      * This range still applies if temperatures are specified in Celsius
-      * A reduced range should be applied in the Celsius case (-100 C to 60 C)
+    * Ensure consistency between different temperature range checks
 
 * Expand documentation:
   * Justify values used in command line argument range checks
