@@ -201,7 +201,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -em 0.7314196                            \
                             -tr 0.7736024                            \
                             -pr 0.3595031                            \
-                            -ta 12.2507737                           \
+                            -ta 54.0513927                           \
                             -de F
 
 # The same using long options
@@ -213,7 +213,7 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --emissivity 0.7314196                    \
                             --transmissivity 0.7736024                \
                             --percent_net_radiation 0.3595031         \
-                            --atmos_temp_adjust 12.2507737            \
+                            --atmos_temp_adjust 54.0513927            \
                             --degrees F
 ```
 The surface temperature prediction should then be used as the -st/--surface_temp
