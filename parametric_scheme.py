@@ -48,11 +48,16 @@ def int_range(min=None, max=None):
 #       because degrees returned None instead of F or C (when using getattr)
 #       Possibly because parse_args() not yet ran
 def temp_range(temp, degrees):
+    if temp is None:
+        return 0
+
     if (temp < -150.0 or temp > 150.0) and (degrees == 'F' or degrees == 'f'):
-        print("Fahrenheit temperatures must be between -150 and 150 F")
+        print("ERROR: Fahrenheit temperatures must be between -150 and 150 F")
+        print("ERROR: Supplied value %f F" % temp)
         exit()
     elif (temp < -100.0 or temp > 66.0) and (degrees == 'C' or degrees == 'c'):
-        print("Celsius temperatures must be between -100 and 66 C")
+        print("ERROR: Celsius temperatures must be between -100 and 66 C")
+        print("ERROR: Supplied value %f C" % temp)
         exit()
 
     return 0
@@ -63,7 +68,10 @@ def f_to_k(f):
     Convert Fahrenheit to Kelvin
     '''
 
-    k = (f + 459.67) * 5 / 9
+    if f is not None:
+        k = (f + 459.67) * 5 / 9
+    else:
+        k = None
 
     return k
 
@@ -83,7 +91,10 @@ def c_to_k(c):
     Convert Celsius to Kelvin
     '''
 
-    k = c + 273.15
+    if c is not None:
+        k = c + 273.15
+    else:
+        k = None
 
     return k
 
@@ -127,7 +138,7 @@ def downwelling_rad(args):
     #   Adjustment - surface temperature +/- argument
     #   Constant   - constant value
     if args.atmos_temp_constant is not None:
-        T_a = f_to_k(args.atmos_temp_constant)
+        T_a = args.atmos_temp_constant
     elif args.atmos_temp_adjust is not None:
         T_a = args.surface_temp + args.atmos_temp_adjust
     else:
@@ -140,7 +151,7 @@ def downwelling_rad(args):
     #   Adjustment - surface temperature +/- argument
     #   Constant   - constant value
     if args.cloud_temp_constant is not None:
-        T_c = f_to_k(args.cloud_temp_constant)
+        T_c = args.cloud_temp_constant
     elif args.cloud_temp_adjust is not None:
         T_c = args.surface_temp + args.cloud_temp_adjust
     else:
@@ -371,9 +382,17 @@ def main(args):
     if args.degrees.upper() == 'C':
         args.ground_temp  = c_to_k(args.ground_temp)
         args.surface_temp = c_to_k(args.surface_temp)
+        args.atmos_temp_constant = c_to_k(args.atmos_temp_constant)
+        args.atmos_temp_adjust   = c_to_k(args.atmos_temp_adjust)
+        args.cloud_temp_constant = c_to_k(args.cloud_temp_constant)
+        args.cloud_temp_adjust   = c_to_k(args.cloud_temp_adjust)
     elif args.degrees.upper() == 'F':
         args.ground_temp  = f_to_k(args.ground_temp)
         args.surface_temp = f_to_k(args.surface_temp)
+        args.atmos_temp_constant = f_to_k(args.atmos_temp_constant)
+        args.atmos_temp_adjust   = f_to_k(args.atmos_temp_adjust)
+        args.cloud_temp_constant = f_to_k(args.cloud_temp_constant)
+        args.cloud_temp_adjust   = f_to_k(args.cloud_temp_adjust)
 
     for i in range(0, args.forecast_period, d_t):
         Q_S  = solar_rad(args)                # Incoming solar radiation
@@ -433,11 +452,11 @@ if __name__ == '__main__':
     required.add_argument('-da', '--day_of_year',
             help='Julian day of year',
             required=True, type=int_range(0, 365), metavar="[1, 365]")
-    # ground_temp validation using temp_range after parse_args()
+    # validation using temp_range after parse_args()
     required.add_argument('-gt', '--ground_temp',
             help='Ground reservoir temperature (Fahrenheit or Celsius)',
             default=None, type=float)
-    # surface_temp validation using temp_range after parse_args()
+    # validation using temp_range after parse_args()
     required.add_argument('-st', '--surface_temp',
             help='Initial surface air temperature (Fahrenheit or Celsius)',
             default=None, type=float)
@@ -489,26 +508,38 @@ if __name__ == '__main__':
             default=0, type=float_range(0, None), metavar="[0, None]")
 
     mutex1 = parser.add_mutually_exclusive_group()
+    # validation using temp_range after parse_args()
     mutex1.add_argument('-at', '--atmos_temp_constant',
-            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa adjustment (Fahrenheit only) constant value',
-            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa adjustment - constant value',
+            nargs='?', default=None, type=float)
+    # validation using temp_range after parse_args()
     mutex1.add_argument('-ta', '--atmos_temp_adjust',
-            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa (Kelvin only) surface temperature plus/minus adjustment value default=0',
-            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa - surface temperature plus/minus this adjustment value',
+            nargs='?', default=None, type=float)
 
     mutex2 = parser.add_mutually_exclusive_group()
+    # validation using temp_range after parse_args()
     mutex2.add_argument('-ct', '--cloud_temp_constant',
-            help='EXPERIMENTAL: Temperature of the base of the cloud (Fahrenheit only) constant value',
-            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            help='EXPERIMENTAL: Temperature at the base of the cloud - constant value',
+            nargs='?', default=None, type=float)
+    # validation using temp_range after parse_args()
     mutex2.add_argument('-tc', '--cloud_temp_adjust',
-            help='EXPERIMENTAL: Temperature of the base of the cloud (Kelvin only) surface temperature plus/minus adjustment value default=0',
-            nargs='?', default=None, type=float_range(-150, 150), metavar="[-150, 150]")
+            help='EXPERIMENTAL: Temperature of the base of the cloud - surface temperature plus/minus this adjustment value',
+            nargs='?', default=None, type=float)
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
 
-    temp_range(args.ground_temp,  args.degrees)
-    temp_range(args.surface_temp, args.degrees)
+    # NOTE: Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
+    #       because degrees returned None instead of F or C (when using getattr)
+    #       Possibly because parse_args() not yet ran
+    #       So, validation using temp_range after parse_args()
+    temp_range(args.ground_temp,         args.degrees)
+    temp_range(args.surface_temp,        args.degrees)
+    temp_range(args.atmos_temp_constant, args.degrees)
+    temp_range(args.atmos_temp_adjust,   args.degrees)
+    temp_range(args.cloud_temp_constant, args.degrees)
+    temp_range(args.cloud_temp_adjust,   args.degrees)
 
     print_v = print if args.verbose else lambda *a, **k: None
 
