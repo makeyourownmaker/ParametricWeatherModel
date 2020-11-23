@@ -25,10 +25,10 @@ Predict surface temperature at specified latitude, longitude, day of year,
 ground temperature and initial surface temperature:
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2
+python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2 -de F
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0.2
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0.2 --degrees F
 
 # To list all command line options
 python parametric_scheme.py -h
@@ -76,10 +76,10 @@ There are two options for calculating the sensible heat flux:
 To use the experimental method the percent of net radiation must be set to 0:
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000
+python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000 -de F
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0 --resistance 1000
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0 --resistance 1000 --degrees F
 ```
 
 Equation and page numbers in the python code refer to
@@ -102,39 +102,38 @@ Included parameters:
 | Surface temperature   | -st   | --surface_temp          | Initial surface air temperature (F or C)   | N/A     |
 | Ground temperature    | -gt   | --ground_temp           | Ground reservoir temperature (F or C)      | N/A     |
 | Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)             | N/A     |
+| Degrees               | -de   | --degrees               | Temperatures in Celsius or Fahrenheit      | N/A     |
 
   * Optional parameters:
 
-| Name                               | Short | Long                  | Description                                                                    | Default             |
-|------------------------------------|-------|-----------------------|--------------------------------------------------------------------------------|---------------------|
-| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                                           | 12                  |
-| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                                 | 0.3                 |
-| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                                         | 0                   |
-| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                                    | 173                 |
-| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                                 | 0                   |
-| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                                        | 3600                |
-| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                                     | 0.8                 |
-| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                                | 0.95                |
-| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                                         | 0.9                 |
-| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                                       | 1.0                 |
-| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                                  | 0                   |
-| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment (Kelvin)          | 0                   |
-| Cloud temperature constant         | -ct   | --cloud_temp_constant | EXPERIMENTAL Temperature of the base of the cloud constant (Fahrenheit)        | Surface temperature |
-| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment (Kelvin)   | 0                   |
-| Atmospheric temperature constant   | -at   | --atmos_temp_constant | EXPERIMENTAL Air temperature at 40 hPa above the surface constant (Fahrenheit) | Surface temperature |
-| File name                          | -fn   | --filename            | File name for comma separated value output                                     | N/A                 |
-| Help                               | -h    | --help                | Show this help message and exit                                                | N/A                 |
-| Verbose                            | -v    | --verbose             | Print additional information                                                   | N/A                 |
+| Name                               | Short | Long                  | Description                                                         | Default             |
+|------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
+| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                                | 12                  |
+| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                      | 0.3                 |
+| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                              | 0                   |
+| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                         | 173                 |
+| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                      | 0                   |
+| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                             | 3600                |
+| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                          | 0.8                 |
+| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                     | 0.95                |
+| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                              | 0.9                 |
+| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                            | 1.0                 |
+| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                       | 0                   |
+| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment        | 0                   |
+| Cloud temperature constant         | -ct   | --cloud_temp_constant | EXPERIMENTAL Temperature of the base of the cloud constant          | Surface temperature |
+| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment | 0                   |
+| Atmospheric temperature constant   | -at   | --atmos_temp_constant | EXPERIMENTAL Air temperature at 40 hPa above the surface constant   | Surface temperature |
+| File name                          | -fn   | --filename            | File name for comma separated value output                          | N/A                 |
+| Help                               | -h    | --help                | Show this help message and exit                                     | N/A                 |
+| Verbose                            | -v    | --verbose             | Print additional information                                        | N/A                 |
 
 Note:
- * Temperatures in Fahrenheit are converted to Kelvin in the script
  * The cloud fraction and cloud base temperature options are largely untested
  * Both the atmospheric and cloud temperatures default to the surface temperature value unless otherwise specified
- * Ground and surface temperature range checks start at -150 F and end at 150 F
+ * Temperature range checks start at -150 F and end at 150 F (-100 C and 66 C)
    * This wide range of input values may not be compatible with all the parameterization scheme assumptions
-   * This range still applies if temperatures are specified in Celsius
 
-The atmospheric temperature adjustment equals the surface temperature plus/minus argument degrees Kelvin.
+The atmospheric temperature adjustment calculation equals the surface temperature plus/minus the supplied argument
 Similarly for the cloud temperature adjustment.  These two options are intended to provide a simple method
 to vary these temperatures over a 24 hour period as shown in the comparison section below.  This simple
 approach is not suggested in the Parameterization Schemes book.
@@ -265,7 +264,7 @@ These variables are separated by tabs.
     * Results for non-zero cloud fraction are questionable:
       * Assumes temperature at the base of the cloud equals surface
         temperature which it certainly does not
-  * Ground and surface temperature range checks start at -150 F and end at 150 F
+  * Temperature range checks start at -150 F and end at 150 F (-100 C and 66 C)
     * This wide range of input values may not be compatible with all the parameterization scheme assumptions
   * Will not work over water, snow ...
 
@@ -292,7 +291,7 @@ These variables are separated by tabs.
 
 * Improve command line options:
   * Improve argparse range checks:
-    * Ensure consistency between different temperature range checks
+    * Add error messages if cloud base adjustment or cloud base constant parameters or used with cloud fraction equal to 0
 
 * Expand documentation:
   * Justify values used in command line argument range checks
