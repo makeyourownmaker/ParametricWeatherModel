@@ -132,11 +132,10 @@ def downwelling_rad(args):
     b   = args.cloud_fraction  # Cloud fraction
     e_g = args.emissivity      # Surface emissivity
 
-    # EXPERIMENTAL
     # This command line argument models temperature at 40 hPa above the ground surface
     # Atmospheric temperature constant or adjustment or surface temperature:
-    #   Adjustment - surface temperature +/- argument
     #   Constant   - constant value
+    #   Adjustment - surface temperature +/- argument  EXPERIMENTAL
     if args.atmos_temp_constant is not None:
         T_a = args.atmos_temp_constant
     elif args.atmos_temp_adjust is not None:
@@ -144,12 +143,11 @@ def downwelling_rad(args):
     else:
         T_a = args.surface_temp
 
-    # EXPERIMENTAL
     # This command line argument models temperature at the base of the cloud
     # Irrelevant if cloud fraction is 0
     # Cloud base temperature constant or adjustment or surface temperature:
-    #   Adjustment - surface temperature +/- argument
     #   Constant   - constant value
+    #   Adjustment - surface temperature +/- argument  EXPERIMENTAL
     if args.cloud_temp_constant is not None:
         T_c = args.cloud_temp_constant
     elif args.cloud_temp_adjust is not None:
@@ -207,8 +205,6 @@ def sensible_heat_flux(args, N_R):
         T_g = args.ground_temp
         T_s = args.surface_temp
         Q_H = rho * c_p * (T_g - T_s) / r_H
-    else:
-        exit("Error!\nEither 'percent net radiation' or 'resistance to heat flux' must be non-zero.\n")
 
     print_v("Q_H:\t", Q_H)
 
@@ -378,6 +374,7 @@ def main(args):
     # "Constants"
     c_g = 1.4 * 10**5  # J m^-2 K^-1 - Soil heat capacity
     d_t = 1
+    sum_d_T_s = 0
 
     if args.degrees.upper() == 'C':
         args.ground_temp  = c_to_k(args.ground_temp)
@@ -406,13 +403,18 @@ def main(args):
 
         # Based on only equation in question 6  Page 61
         d_T_s = (Q_S + Q_Ld - Q_Lu - Q_H - Q_E - Q_G) * d_t / c_g
+        sum_d_T_s += d_T_s
         print_v("d_T_s:\t", d_T_s)  # , "K")
+        args.surface_temp = args.surface_temp + d_T_s
 
     if args.degrees.upper() == 'C':
-        T_s = k_to_c(args.surface_temp + d_T_s)
+        # T_s = k_to_c(args.surface_temp + d_T_s)
+        T_s = k_to_c(args.surface_temp)
     elif args.degrees.upper() == 'F':
-        T_s = k_to_f(args.surface_temp + d_T_s)
+        # T_s = k_to_f(args.surface_temp + d_T_s)
+        T_s = k_to_f(args.surface_temp)
 
+    print_v("Sum_dTs:\t", sum_d_T_s)  # , "K")
     print("T_s:\t", T_s)  # , "F")
 
     if args.filename is not None:
@@ -510,21 +512,21 @@ if __name__ == '__main__':
     mutex1 = parser.add_mutually_exclusive_group()
     # validation using temp_range after parse_args()
     mutex1.add_argument('-at', '--atmos_temp_constant',
-            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa adjustment - constant value',
+            help='Atmospheric temperature at 40 hPa - constant value',
             nargs='?', default=None, type=float)
     # validation using temp_range after parse_args()
     mutex1.add_argument('-ta', '--atmos_temp_adjust',
-            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa - surface temperature plus/minus this adjustment value',
+            help='EXPERIMENTAL: Atmospheric temperature at 40 hPa - surface temperature plus this adjustment value',
             nargs='?', default=None, type=float)
 
     mutex2 = parser.add_mutually_exclusive_group()
     # validation using temp_range after parse_args()
     mutex2.add_argument('-ct', '--cloud_temp_constant',
-            help='EXPERIMENTAL: Temperature at the base of the cloud - constant value',
+            help='Base of cloud temperature - constant value',
             nargs='?', default=None, type=float)
     # validation using temp_range after parse_args()
     mutex2.add_argument('-tc', '--cloud_temp_adjust',
-            help='EXPERIMENTAL: Temperature of the base of the cloud - surface temperature plus/minus this adjustment value',
+            help='EXPERIMENTAL: Base of cloud temperature - surface temperature plus this adjustment value',
             nargs='?', default=None, type=float)
 
     parser._action_groups.append(optional)
@@ -540,6 +542,12 @@ if __name__ == '__main__':
     temp_range(args.atmos_temp_adjust,   args.degrees)
     temp_range(args.cloud_temp_constant, args.degrees)
     temp_range(args.cloud_temp_adjust,   args.degrees)
+
+    if args.percent_net_radiation == 0 and args.resistance == 0:
+        print("\nERROR: 'percent net radiation' and 'resistance to heat flux' cannot both be zero.")
+        print("ERROR: 'percent net radiation' %f" % args.percent_net_radiation)
+        print("ERROR: 'resistance to heat flux' %f\n" % args.resistance)
+        exit()
 
     print_v = print if args.verbose else lambda *a, **k: None
 
