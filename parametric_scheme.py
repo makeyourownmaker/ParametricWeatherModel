@@ -51,11 +51,11 @@ def temp_range(temp, degrees):
     if temp is None:
         return 0
 
-    if (temp < -150.0 or temp > 150.0) and (degrees == 'F' or degrees == 'f'):
+    if (temp < -150.0 or temp > 150.0) and degrees.upper() == 'F':
         print("ERROR: Fahrenheit temperatures must be between -150 and 150 F")
         print("ERROR: Supplied value %f F" % temp)
         exit()
-    elif (temp < -100.0 or temp > 66.0) and (degrees == 'C' or degrees == 'c'):
+    elif (temp < -100.0 or temp > 66.0) and degrees.upper() == 'C':
         print("ERROR: Celsius temperatures must be between -100 and 66 C")
         print("ERROR: Supplied value %f C" % temp)
         exit()
@@ -415,7 +415,7 @@ def main(args):
         T_s = k_to_f(args.surface_temp)
 
     print_v("Sum_dTs:\t", sum_d_T_s)  # , "K")
-    print("T_s:\t", T_s)  # , "F")
+    print("T_s:\t", T_s)  # , "F/C")
 
     if args.filename is not None:
         line = str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
