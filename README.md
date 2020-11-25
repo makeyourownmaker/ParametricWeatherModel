@@ -119,10 +119,10 @@ Included parameters:
 | Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                              | 0.9                 |
 | Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                            | 1.0                 |
 | Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                       | 0                   |
+| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant                       | Surface temperature |
 | Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment        | 0                   |
-| Cloud temperature constant         | -ct   | --cloud_temp_constant | EXPERIMENTAL Temperature of the base of the cloud constant          | Surface temperature |
+| Atmospheric temperature constant   | -at   | --atmos_temp_constant | Air temperature at 40 hPa above the surface constant                | Surface temperature |
 | Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment | 0                   |
-| Atmospheric temperature constant   | -at   | --atmos_temp_constant | EXPERIMENTAL Air temperature at 40 hPa above the surface constant   | Surface temperature |
 | File name                          | -fn   | --filename            | File name for comma separated value output                          | N/A                 |
 | Help                               | -h    | --help                | Show this help message and exit                                     | N/A                 |
 | Verbose                            | -v    | --verbose             | Print additional information                                        | N/A                 |
@@ -290,8 +290,15 @@ These variables are separated by tabs.
   * What is an acceptable prediction interval?
 
 * Improve command line options:
-  * Improve argparse range checks:
-    * Add error messages if cloud base adjustment or cloud base constant parameters or used with cloud fraction equal to 0
+  * Add minutes past the hour start time option
+    * Relevant when required to calculate temperatures starting from sunrise (at say 6:36 AM)
+    * Defalut to 0
+  * Add forecast time in minutes argument
+    * Currently forecasts are only produced for 60 minutes from the specified time
+    * Maintain the current default
+  * Improve argparse checks:
+    * Add error messages if atmospheric temperature adjustment or cloud base temperature adjustment are set to 0
+    * Add error messages if cloud base adjustment or cloud base constant parameters or used when cloud fraction is equal to 0
 
 * Expand documentation:
   * Justify values used in command line argument range checks
