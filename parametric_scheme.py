@@ -9,9 +9,9 @@ import datetime
 
 
 # NOTE Equation and page numbers in the comments refer to
-# Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models
-# https://doi.org/10.1017/CBO9780511812590
-# by David J. Stensrud http://www.met.psu.edu/people/djs78
+#      Parameterization Schemes: Keys to Understanding Numerical Weather Prediction Models
+#      https://doi.org/10.1017/CBO9780511812590
+#      by David J. Stensrud http://www.met.psu.edu/people/djs78
 
 
 def float_range(min=None, max=None):
@@ -44,10 +44,14 @@ def int_range(min=None, max=None):
     return check_range
 
 
-# NOTE: Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
-#       because degrees returned None instead of F or C (when using getattr)
-#       Possibly because parse_args() not yet ran
+# NOTE Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
+#      because degrees returned None instead of F or C (when using getattr)
+#      Possibly because parse_args() not yet ran
 def temp_range(temp, degrees):
+    '''
+    Validate temperatures within Celsius or Fahrenheit ranges
+    '''
+
     if temp is None:
         return 0
 
@@ -136,6 +140,7 @@ def downwelling_rad(args):
     # Atmospheric temperature constant or adjustment or surface temperature:
     #   Constant   - constant value
     #   Adjustment - surface temperature +/- argument  EXPERIMENTAL
+    #   Default    - surface temperature
     if args.atmos_temp_constant is not None:
         T_a = args.atmos_temp_constant
     elif args.atmos_temp_adjust is not None:
@@ -148,6 +153,7 @@ def downwelling_rad(args):
     # Cloud base temperature constant or adjustment or surface temperature:
     #   Constant   - constant value
     #   Adjustment - surface temperature +/- argument  EXPERIMENTAL
+    #   Default    - surface temperature
     if args.cloud_temp_constant is not None:
         T_c = args.cloud_temp_constant
     elif args.cloud_temp_adjust is not None:
@@ -265,7 +271,7 @@ def local_hour(args):
     EoT  = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
 
     TC  = 4 * (args.longitude - LSTM) + EoT
-    LST = args.hour + TC / 60
+    LST = args.hour + args.minute / 60 + TC / 60
     HRA = 15 * (LST - 12)
     print_v("LSTM:\t", LSTM)
     print_v("B:\t", B)
@@ -366,14 +372,61 @@ def solar_rad(args):
     return Q_S
 
 
+def inc_mins_hours_days(args):
+    '''
+    Increment minutes, hours and days in main computation loop
+    '''
+
+    if args.minute == 59:
+        args.minute = 0
+        if args.hour == 23:
+            args.hour = 0
+            if args.day_of_year == 365:
+                args.day_of_year = 1
+            else:
+                args.day_of_year += 1
+        else:
+            args.hour += 1
+    else:
+        args.minute += 1
+
+    return 0
+
+
+def write_csv(args, Q_S, Q_Ld, Q_Lu, Q_H, Q_E, Q_G, d_T_s, T_s):
+    '''
+    Write to CSV file
+    '''
+
+    if args.filename is not None:
+        line = str(args.day_of_year) + "\t" + str(args.hour) + "\t" + str(args.minute)
+        line = line + "\t" + str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
+        line = line + "\t" + str(Q_E) + "\t" + str(Q_G) + "\t" + str(d_T_s)
+        line = line + "\t" + str(T_s) + "\n"
+
+        header = False
+        if not os.path.exists(args.filename) or os.stat(args.filename).st_size == 0:
+            header = True
+
+        with open(args.filename, 'a+') as f:
+            if header is True:
+                f.write("Day\tHour\tMinute\tQ_S\tQ_Ld\tQ_Lu\tQ_H\tQ_E\tQ_G\td_T_s\tT_s\n")
+            f.write(line)
+        f.close()
+
+        return 0
+
+
 def main(args):
     '''
     Calculate surface temperature at latitude and longitude
+    Update surface temperature and solar hour angle every minute
+    Optionally write to CSV file every args.report_period minutes
     '''
 
     # "Constants"
     c_g = 1.4 * 10**5  # J m^-2 K^-1 - Soil heat capacity
-    d_t = 1
+    d_t = 60
     sum_d_T_s = 0
 
     if args.degrees.upper() == 'C':
@@ -391,7 +444,7 @@ def main(args):
         args.cloud_temp_constant = f_to_k(args.cloud_temp_constant)
         args.cloud_temp_adjust   = f_to_k(args.cloud_temp_adjust)
 
-    for i in range(0, args.forecast_period, d_t):
+    for i in range(0, args.forecast_minutes):
         Q_S  = solar_rad(args)                # Incoming solar radiation
         Q_Ld = downwelling_rad(args)          # Downwelling longwave radiation
         Q_Lu = upwelling_rad(args)            # Upwelling longwave radiation
@@ -407,38 +460,28 @@ def main(args):
         print_v("d_T_s:\t", d_T_s)  # , "K")
         args.surface_temp = args.surface_temp + d_T_s
 
+        inc_mins_hours_days(args)
+
+        if i % args.report_period == 0:
+            if args.degrees.upper() == 'C':
+                T_s = k_to_c(args.surface_temp)
+            elif args.degrees.upper() == 'F':
+                T_s = k_to_f(args.surface_temp)
+
+            print_v("T_s:\t", T_s)  # , "F/C")
+            write_csv(args, Q_S, Q_Ld, Q_Lu, Q_H, Q_E, Q_G, sum_d_T_s, T_s)
+
     if args.degrees.upper() == 'C':
-        # T_s = k_to_c(args.surface_temp + d_T_s)
         T_s = k_to_c(args.surface_temp)
     elif args.degrees.upper() == 'F':
-        # T_s = k_to_f(args.surface_temp + d_T_s)
         T_s = k_to_f(args.surface_temp)
 
     print_v("Sum_dTs:\t", sum_d_T_s)  # , "K")
     print("T_s:\t", T_s)  # , "F/C")
-
-    if args.filename is not None:
-        line = str(Q_S) + "\t" + str(Q_Ld) + "\t" + str(Q_Lu) + "\t" + str(Q_H)
-        line = line + "\t" + str(Q_E) + "\t" + str(Q_G) + "\t" + str(d_T_s)
-        line = line + "\t" + str(T_s) + "\n"
-
-        header = False
-        if not os.path.exists(args.filename) or os.stat(args.filename).st_size == 0:
-            header = True
-
-        with open(args.filename, 'a+') as f:
-            if header is True:
-                f.write("Q_S\tQ_Ld\tQ_Lu\tQ_H\tQ_E\tQ_G\td_T_s\tT_s\n")
-            f.write(line)
-        f.close()
+    write_csv(args, Q_S, Q_Ld, Q_Lu, Q_H, Q_E, Q_G, sum_d_T_s, T_s)
 
     return 0
 
-
-# Parameters to add:
-#   Required:
-#     * Initial surface air temperature (Celsius)
-#     * Ground reservoir temperature (Celsius)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -474,8 +517,11 @@ if __name__ == '__main__':
             help='Print additional information',
             default=True, action="store_false")
     optional.add_argument('-ho', '--hour',
-            help='Hour of day - default=12',
+            help='Initial hour of day - default=12',
             default=12, type=int, metavar="[0, 24]", choices=range(0, 25))
+    optional.add_argument('-mi', '--minute',
+            help='Initial minute of hour - default=0',
+            default=0, type=int, metavar="[0, 59]", choices=range(0, 60))
     optional.add_argument('-al', '--albedo',
             help='Albedo - default=0.3',
             default=0.3, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
@@ -488,9 +534,12 @@ if __name__ == '__main__':
     optional.add_argument('-uo', '--utc_offset',
             help='UTC offset in hours - default=0',
             default=0, type=int, metavar="[-12, 12]", choices=range(-12, 13))
-    optional.add_argument('-fp', '--forecast_period',
-            help='Forecast period in seconds - default=3600',
-            default=3600, type=int_range(600, 3601), metavar="[600, 3600]")
+    optional.add_argument('-rp', '--report_period',
+            help='Report period in minutes - default=60',
+            default=60, type=int_range(1, 61), metavar="[1, 60]")
+    optional.add_argument('-fm', '--forecast_minutes',
+            help='Forecast period in minutes - default=1',
+            default=1, type=int_range(1, 1441), metavar="[1, 1440]")
     optional.add_argument('-tr', '--transmissivity',
             help='Atmospheric transmissivity - default=0.8',
             default=0.8, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
