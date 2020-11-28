@@ -168,12 +168,12 @@ local hour of the sun approximation and atmospheric temperature
 ajustment.  So, I would not expect identical results.  The final
 T_S plot below shows reasonable agreement between the Madaus
 predictions and mine for surface temperature
-(RMSE is approximately 2.05).  Madaus results are plotted in green.
+(RMSE is approximately 3.05).  Madaus results are plotted in green.
 I am not a meteorologist, so I am not certain all the results are
 reasonable.
-Anecdotally, the downwelling radiation (Q_Ld) predictions seem low.
+Constant Q_Ld and Q_Lu are unrealistic.
 
-<img src="figures/deopt.01.png" align="center" />
+<img src="figures/deopt.02.png" align="center" />
 
 The plots are in order from left to right and top to bottom:
 
@@ -199,32 +199,39 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -da 229 -ho 13                           \
                             -gt 54 -st 72                            \
                             -uo -8 -pw 1.27                          \
-                            -al 0.1147677                            \
-                            -em 0.7314196                            \
-                            -tr 0.7736024                            \
-                            -pr 0.3595031                            \
-                            -ta 54.0513927                           \
-                            -de F
+                            -al 0.1866694                            \
+                            -em 0.8110634                            \
+                            -tr 0.6351528                            \
+                            -pr 0.3305529                            \
+                            -at -46.5617064                          \
+                            -de F                                    \
+                            -fm 1440                                 \
+                            -rp 60                                   \
+                            -fn data.csv
 
 # The same using long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --day_of_year 229 --hour 13               \
                             --ground_temp 54 --surface_temp 72        \
                             --utc_offset -8 --precip_water 1.27       \
-                            --albedo 0.1147677                        \
-                            --emissivity 0.7314196                    \
-                            --transmissivity 0.7736024                \
-                            --percent_net_radiation 0.3595031         \
-                            --atmos_temp_adjust 54.0513927            \
-                            --degrees F
+                            --albedo 0.1866694                        \
+                            --emissivity 0.8110634                    \
+                            --transmissivity 0.6351528                \
+                            --percent_net_radiation 0.3305529         \
+                            --atmos_temp_constant -46.5617064         \
+                            --degrees F                               \
+                            --forecast_minutes 1440                   \
+                            --report_period 60                        \
+                            --filename data.csv
 ```
-The surface temperature prediction should then be used as the -st/--surface_temp
-argument and the -ho/--hour argument should be incremented by 1.
 
-The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmospheric_temp
+The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmos_temp_constant
 arguments used above were produced from an optimisation process over the full 24 hour
 forecast period.  The optimisation process minimised temperature difference with Madaus
-predictions.  A multi-objective optimisation process, considering also some of the
+predictions (RMSE of approximately 3.05 but many other albedo etc values gave very similar RMSE).
+It is possible to get RMSE values of 2.05 using the --atmos_temp_adjust option but using
+that option may mean the model is over-determined.
+A multi-objective optimisation process, considering also some of the
 radiative processes, may give more realistic results.
 I am not a meteorologist, so I am not certain this combination of values is reasonable.
 
@@ -270,7 +277,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -de F                                    \
                             -fm 1440                                 \
                             -rp 60                                   \
-                            -fn foo.csv
+                            -fn data.csv
 
 # The same using long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
@@ -285,10 +292,10 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --degrees F                               \
                             --forecast_minutes 1440                   \
                             --report_period 60                        \
-                            --filename foo.csv
+                            --filename data.csv
 ```
 
-Make intermediate forecasts in foo.csv file every 60 mins for 24 hours (1440 = 24 * 60 mins).
+Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 24 * 60 mins).
 
 ### Limitations and assumptions
 
@@ -303,12 +310,10 @@ Make intermediate forecasts in foo.csv file every 60 mins for 24 hours (1440 = 2
       from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives thermal conductivity, thermal 
       diffusivity and specific heat values for various surfaces
   * The elliptical orbital ratio is an approximation
-  * Results for downwelling radiation are questionable:
-    * Assumes temperature at 40 hPa above the ground surface equals surface
-      temperature which it certainly does not
-    * Results for non-zero cloud fraction are questionable:
-      * Assumes temperature at the base of the cloud equals surface
-        temperature which it certainly does not
+  * Assumes temperature at 40 hPa above the ground surface equals surface
+    temperature which it certainly does not
+  * Assumes temperature at the base of the cloud equals surface
+    temperature which it certainly does not
   * Temperature range checks start at -150 F and end at 150 F (-100 C and 66 C)
     * This wide range of input values may not be compatible with all the parameterization scheme assumptions
   * Will not work over water, snow ...
@@ -318,7 +323,6 @@ Make intermediate forecasts in foo.csv file every 60 mins for 24 hours (1440 = 2
 
 * Perform sanity checks:
   * Starting with [Luke Madaus examples](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
-    * Check if downwelling radiation is too low in the later hours
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
   * Surface energy budget should balance - Equation 2.102  Page 55
@@ -328,7 +332,7 @@ Make intermediate forecasts in foo.csv file every 60 mins for 24 hours (1440 = 2
   * Find examples from the literature for comparison
 
 * Add unit tests:
-  * Setup travis CI
+  * Setup travis CI or similar testing environment
   * Find range of test cases where surface temperature and all parameters are known
     * Examples from the literature for each of the heat fluxes
       * Preferably observations
