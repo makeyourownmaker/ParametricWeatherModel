@@ -108,12 +108,14 @@ Included parameters:
 
 | Name                               | Short | Long                  | Description                                                         | Default             |
 |------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
-| Hour                               | -ho   | --hour                | Hour of day; 0 to 24                                                | 12                  |
+| Hour                               | -ho   | --hour                | Initial hour of day; 0 to 24                                        | 12                  |
+| Minute                             | -mi   | --minute              | Initial minute of hour; 0 to 59                                     | 59                  |
 | Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                      | 0.3                 |
 | Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                              | 0                   |
 | Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                         | 173                 |
 | UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                      | 0                   |
-| Forecast period                    | -fp   | --forecast_period     | Forecast period in seconds; 600 to 3600                             | 3600                |
+| Forecast minutes                   | -fm   | --forecast_minutes    | Forecast minutes ahead; 1 to 1440 (24 * 60)                         | 60                  |
+| Report period                      | -rp   | --report_period       | Report period in minutes (including write to CSV file); 1 to 60     | 60                  |
 | Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                          | 0.8                 |
 | Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                     | 0.95                |
 | Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                              | 0.9                 |
@@ -230,11 +232,14 @@ The default cloud fraction (0) and Bowen ratio (0.9) have been used.
 
 ### CSV output
 
-The --fn and --filename options specify a file to output the following variables
+The -fn and --filename options specify a file to output the following variables
 to:
 
 | Variable | Description                   |
 |----------|-------------------------------|
+| Day      | Day                           |
+| Hour     | Hour                          |
+| Minute   | Minute                        |
 | Q_S      | Solar radiation               |
 | Q_Ld     | Downwelling radiation         |
 | Q_Lu     | Upwelling radiation           |
@@ -245,6 +250,45 @@ to:
 | T_s      | Surface temperature           |
 
 These variables are separated by tabs.
+
+The variables are written to file at the end of the calculations.
+Optionally intermediate values during the calculations can be
+written using the -rp or --report_period option.  This option
+specifies appending to the file in regular minute intervals.
+
+```sh
+# Using short options
+python parametric_scheme.py -la 47.6928 -lo -122.3038                \
+                            -da 229 -ho 13                           \
+                            -gt 54 -st 72                            \
+                            -uo -8 -pw 1.27                          \
+                            -al 0.1147677                            \
+                            -em 0.7314196                            \
+                            -tr 0.7736024                            \
+                            -pr 0.3595031                            \
+                            -ta 54.0513927                           \
+                            -de F                                    \
+                            -fm 1440                                 \
+                            -rp 60                                   \
+                            -fn foo.csv
+
+# The same using long options
+python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
+                            --day_of_year 229 --hour 13               \
+                            --ground_temp 54 --surface_temp 72        \
+                            --utc_offset -8 --precip_water 1.27       \
+                            --albedo 0.1147677                        \
+                            --emissivity 0.7314196                    \
+                            --transmissivity 0.7736024                \
+                            --percent_net_radiation 0.3595031         \
+                            --atmos_temp_adjust 54.0513927            \
+                            --degrees F                               \
+                            --forecast_minutes 1440                   \
+                            --report_period 60                        \
+                            --filename foo.csv
+```
+
+Make intermediate forecasts in foo.csv file every 60 mins for 24 hours (1440 = 24 * 60 mins).
 
 ### Limitations and assumptions
 
@@ -258,6 +302,7 @@ These variables are separated by tabs.
     * Table A7 in [lecture 10 of AS547](https://atmos.washington.edu/~breth/classes/AS547/lect/lect10.pdf)
       from [Chris Bretherton](https://atmos.washington.edu/~breth/) gives thermal conductivity, thermal 
       diffusivity and specific heat values for various surfaces
+  * The elliptical orbital ratio is an approximation
   * Results for downwelling radiation are questionable:
     * Assumes temperature at 40 hPa above the ground surface equals surface
       temperature which it certainly does not
@@ -290,15 +335,10 @@ These variables are separated by tabs.
   * What is an acceptable prediction interval?
 
 * Improve command line options:
-  * Add minutes past the hour start time option
-    * Relevant when required to calculate temperatures starting from sunrise (at say 6:36 AM)
-    * Defalut to 0
-  * Add forecast time in minutes argument
-    * Currently forecasts are only produced for 60 minutes from the specified time
-    * Maintain the current default
   * Improve argparse checks:
     * Add error messages if atmospheric temperature adjustment or cloud base temperature adjustment are set to 0
     * Add error messages if cloud base adjustment or cloud base constant parameters or used when cloud fraction is equal to 0
+    * Add error message if report period is greater than forecast minutes
 
 * Expand documentation:
   * Justify values used in command line argument range checks
