@@ -229,8 +229,8 @@ The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmo
 arguments used above were produced from an optimisation process over the full 24 hour
 forecast period.  The optimisation process minimised temperature difference with Madaus
 predictions (RMSE of approximately 3.05 but many other albedo etc values gave very similar RMSE).
-It is possible to get RMSE values of 2.05 using the --atmos_temp_adjust option but using
-that option may mean the model is over-determined.
+It is possible to get RMSE values of 2.05 using my experimental --atmos_temp_adjust option 
+but using that option may mean the model is over-determined.
 A multi-objective optimisation process, considering also some of the
 radiative processes, may give more realistic results.
 I am not a meteorologist, so I am not certain this combination of values is reasonable.
