@@ -321,8 +321,7 @@ Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 
 
 ## Roadmap
 
-* Perform sanity checks:
-  * Starting with [Luke Madaus examples](http://lukemweather.blogspot.com/2011/08/digging-into-simple-weather-model.html)
+* Perform more sanity checks:
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
   * Surface energy budget should balance - Equation 2.102  Page 55
@@ -330,13 +329,6 @@ Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 
       should be positive with high solar radiation (Q_S)
   * Find recent local weather examples for comparison
   * Find examples from the literature for comparison
-
-* Add unit tests:
-  * Setup travis CI or similar testing environment
-  * Find range of test cases where surface temperature and all parameters are known
-    * Examples from the literature for each of the heat fluxes
-      * Preferably observations
-  * What is an acceptable prediction interval?
 
 * Improve command line options:
   * Improve argparse checks:
@@ -346,6 +338,13 @@ Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 
 
 * Expand documentation:
   * Justify values used in command line argument range checks
+
+* Add unit tests:
+  * Setup travis CI or similar testing environment
+  * Find range of test cases where surface temperature and all parameters are known
+    * Examples from the literature for each of the heat fluxes
+      * Preferably observations
+  * What is an acceptable prediction interval?
 
 * Explore sensitivity analysis:
   * It would be interesting (but possibly overkill) to look at
