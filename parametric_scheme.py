@@ -470,6 +470,7 @@ def main(args):
 
             print_v("T_s:\t", T_s)  # , "F/C")
             write_csv(args, Q_S, Q_Ld, Q_Lu, Q_H, Q_E, Q_G, sum_d_T_s, T_s)
+            sum_d_T_s = 0
 
     if args.degrees.upper() == 'C':
         T_s = k_to_c(args.surface_temp)
