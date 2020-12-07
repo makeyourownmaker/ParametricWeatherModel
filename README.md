@@ -297,6 +297,10 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
 
 Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 24 * 60 mins).
 
+The notebooks directory contains the
+[plot_temperature_and_fluxes.ipynb](https://github.com/makeyourownmaker/ParametricWeatherModel/blob/master/notebooks/plot_temperature_and_fluxes.ipynb)
+notebook which will plot the data.csv file.
+
 ### Limitations and assumptions
 
   * A host of atmospheric factors are ignored: refraction, humidity, pressure, wind, rain, snow, pollution etc
