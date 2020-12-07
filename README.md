@@ -207,7 +207,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -de F                                    \
                             -fm 1440                                 \
                             -rp 60                                   \
-                            -fn data.csv
+                            -fn data/data.csv
 
 # The same using long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
@@ -222,7 +222,7 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --degrees F                               \
                             --forecast_minutes 1440                   \
                             --report_period 60                        \
-                            --filename data.csv
+                            --filename data/data.csv
 ```
 
 The --albedo, --emissivity, --transmissivity, --percent_net_radiation and --atmos_temp_constant
@@ -277,7 +277,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -de F                                    \
                             -fm 1440                                 \
                             -rp 60                                   \
-                            -fn data.csv
+                            -fn data/data.csv
 
 # The same using long options
 python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
@@ -292,7 +292,7 @@ python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
                             --degrees F                               \
                             --forecast_minutes 1440                   \
                             --report_period 60                        \
-                            --filename data.csv
+                            --filename data/data.csv
 ```
 
 Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 24 * 60 mins).
