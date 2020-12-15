@@ -334,12 +334,6 @@ notebook which will plot the data.csv file.
   * Find recent local weather examples for comparison
   * Find examples from the literature for comparison
 
-* Improve command line options:
-  * Improve argparse checks:
-    * Add error messages if atmospheric temperature adjustment or cloud base temperature adjustment are set to 0
-    * Add error messages if cloud base adjustment or cloud base constant parameters or used when cloud fraction is equal to 0
-    * Add error message if report period is greater than forecast minutes
-
 * Expand documentation:
   * Justify values used in command line argument range checks
 
