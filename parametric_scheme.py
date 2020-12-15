@@ -484,6 +484,44 @@ def main(args):
     return 0
 
 
+def post_parse_args_checks(args):
+    '''Further arg checks after parse_args.'''
+
+    # NOTE: Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
+    #       because degrees returned None instead of F or C (when using getattr)
+    #       Possibly because parse_args() not yet ran
+    #       So, validation using temp_range after parse_args()
+    temp_range(args.ground_temp,         args.degrees)
+    temp_range(args.surface_temp,        args.degrees)
+    temp_range(args.atmos_temp_constant, args.degrees)
+    temp_range(args.atmos_temp_adjust,   args.degrees)
+    temp_range(args.cloud_temp_constant, args.degrees)
+    temp_range(args.cloud_temp_adjust,   args.degrees)
+
+    if args.percent_net_radiation == 0 and args.resistance == 0:
+        print("\nERROR: 'percent net radiation' and 'resistance to heat flux' cannot both be zero.")
+        print("ERROR: 'percent net radiation' %f" % args.percent_net_radiation)
+        print("ERROR: 'resistance to heat flux' %f\n" % args.resistance)
+        exit()
+
+    if args.report_period > args.forecast_minutes:
+        print("\nERROR: 'report_period' cannot be greater than 'forecast_minutes'.")
+        print("ERROR: 'report_period' %d" % args.report_period)
+        print("ERROR: 'forecast_minutes' %d\n" % args.forecast_minutes)
+        exit()
+
+    if args.cloud_fraction == 0 and (args.cloud_temp_constant is not None or args.cloud_temp_adjust is not None):
+        print("\nERROR: 'cloud_temp_constant' and 'cloud_temp_adjust' cannot be used when 'cloud_fraction' is zero.")
+        print("ERROR: 'cloud_fraction' %f" % args.cloud_fraction)
+        if args.cloud_temp_constant is not None:
+            print("ERROR: 'cloud_temp_constant' %f\n" % args.cloud_temp_constant)
+        if args.cloud_temp_adjust is not None:
+            print("ERROR: 'cloud_temp_adjust' %f\n" % args.cloud_temp_adjust)
+        exit()
+
+    return 0
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             description="Calculate surface temperature at latitude and longitude https://github.com/makeyourownmaker/ParametricWeatherModel")
@@ -582,22 +620,7 @@ if __name__ == '__main__':
     parser._action_groups.append(optional)
     args = parser.parse_args()
 
-    # NOTE: Could not get argparse.Action to validate both Celsius and Fahrenheit temperatures
-    #       because degrees returned None instead of F or C (when using getattr)
-    #       Possibly because parse_args() not yet ran
-    #       So, validation using temp_range after parse_args()
-    temp_range(args.ground_temp,         args.degrees)
-    temp_range(args.surface_temp,        args.degrees)
-    temp_range(args.atmos_temp_constant, args.degrees)
-    temp_range(args.atmos_temp_adjust,   args.degrees)
-    temp_range(args.cloud_temp_constant, args.degrees)
-    temp_range(args.cloud_temp_adjust,   args.degrees)
-
-    if args.percent_net_radiation == 0 and args.resistance == 0:
-        print("\nERROR: 'percent net radiation' and 'resistance to heat flux' cannot both be zero.")
-        print("ERROR: 'percent net radiation' %f" % args.percent_net_radiation)
-        print("ERROR: 'resistance to heat flux' %f\n" % args.resistance)
-        exit()
+    post_parse_args_checks(args)
 
     print_v = print if args.verbose else lambda *a, **k: None
 
