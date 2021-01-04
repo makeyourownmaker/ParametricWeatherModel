@@ -106,34 +106,34 @@ Included parameters:
 
   * Optional parameters:
 
-| Name                               | Short | Long                  | Description                                                         | Default             |
-|------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
-| Hour                               | -ho   | --hour                | Initial hour of day; 0 to 24                                        | 12                  |
-| Minute                             | -mi   | --minute              | Initial minute of hour; 0 to 59                                     | 59                  |
-| Albedo                             | -al   | --albedo              | Albedo; 0 to 1                                                      | 0.3                 |
-| Cloud fraction                     | -cf   | --cloud_fraction      | Cloud fraction; 0 to 1                                              | 0                   |
-| Solstice                           | -ds   | --day_of_solstice     | Day of solstice; 172 or 173                                         | 173                 |
-| UTC offset                         | -uo   | --utc_offset          | UTC offset in hours; -12 to 12                                      | 0                   |
-| Forecast minutes                   | -fm   | --forecast_minutes    | Forecast minutes ahead; 1 to 1440 (24 * 60)                         | 60                  |
-| Report period                      | -rp   | --report_period       | Report period in minutes (including write to CSV file); 1 to 60     | 60                  |
-| Transmissivity                     | -tr   | --transmissivity      | Atmospheric transmissivity; greater than 0                          | 0.8                 |
-| Emissivity                         | -em   | --emissivity          | Surface emissivity; 0.9 to 0.99                                     | 0.95                |
-| Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                              | 0.9                 |
-| Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                            | 1.0                 |
-| Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                       | 0                   |
-| File name                          | -fn   | --filename            | File name for comma separated value output                          | N/A                 |
-| Help                               | -h    | --help                | Show this help message and exit                                     | N/A                 |
-| Verbose                            | -v    | --verbose             | Print additional information                                        | N/A                 |
+| Name                    | Short | Long               | Description                                                     | Default |
+|-------------------------|-------|--------------------|-----------------------------------------------------------------|---------|
+| Hour                    | -ho   | --hour             | Initial hour of day; 0 to 24                                    | 12      |
+| Minute                  | -mi   | --minute           | Initial minute of hour; 0 to 59                                 | 59      |
+| Albedo                  | -al   | --albedo           | Albedo; 0 to 1                                                  | 0.3     |
+| Cloud fraction          | -cf   | --cloud_fraction   | Cloud fraction; 0 to 1                                          | 0       |
+| Solstice                | -ds   | --day_of_solstice  | Day of solstice; 172 or 173                                     | 173     |
+| UTC offset              | -uo   | --utc_offset       | UTC offset in hours; -12 to 12                                  | 0       |
+| Forecast minutes        | -fm   | --forecast_minutes | Forecast minutes ahead; 1 to 1440 (24 * 60)                     | 60      |
+| Report period           | -rp   | --report_period    | Report period in minutes (including write to CSV file); 1 to 60 | 60      |
+| Transmissivity          | -tr   | --transmissivity   | Atmospheric transmissivity; greater than 0                      | 0.8     |
+| Emissivity              | -em   | --emissivity       | Surface emissivity; 0.9 to 0.99                                 | 0.95    |
+| Bowen ratio             | -br   | --bowen_ratio      | Bowen ratio; -10 to 10                                          | 0.9     |
+| Precipitable water      | -pw   | --precip_water     | Precipitable water in cm; greater than 0                        | 1.0     |
+| Resistance to heat flux | -rh   | --resistance       | EXPERIMENTAL Resistance to heat flux (m s^-1)                   | 0       |
+| File name               | -fn   | --filename         | File name for comma separated value output                      | N/A     |
+| Help                    | -h    | --help             | Show this help message and exit                                 | N/A     |
+| Verbose                 | -v    | --verbose          | Print additional information                                    | N/A     |
 
-  * Mutually exclusive optional group 1 parameters:
+  * Mutually exclusive option group 1 parameters:
     * Choose --cloud_temp_constant or --cloud_temp_adjust but not both
 
-| Name                               | Short | Long                  | Description                                                         | Default             |
-|------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
-| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant                       | Surface temperature |
-| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment        | 0                   |
+| Name                         | Short | Long                  | Description                                                  | Default             |
+|------------------------------|-------|-----------------------|--------------------------------------------------------------|---------------------|
+| Cloud temperature constant   | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant                | Surface temperature |
+| Cloud temperature adjustment | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment | 0                   |
 
-  * Mutually exclusive optional group 2 parameters:
+  * Mutually exclusive option group 2 parameters:
     * Choose --atmos_temp_constant or --atmos_temp_adjust but not both
 
 | Name                               | Short | Long                  | Description                                                         | Default             |
