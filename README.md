@@ -25,13 +25,13 @@ Predict surface temperature at specified latitude, longitude, day of year,
 ground temperature and initial surface temperature:
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2 -de F
+python parametricscheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0.2 -de F
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0.2 --degrees F
+python parametricscheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0.2 --degrees F
 
 # To list all command line options
-python parametric_scheme.py -h
+python parametricscheme.py -h
 ```
 
 
@@ -41,8 +41,8 @@ Requires a recent version of python (either 2 or 3 should work).
 
 The following should work on any unix-ish environment:
 ```sh
-wget https://raw.githubusercontent.com/makeyourownmaker/ParametricWeatherModel/master/parametric_scheme.py
-python parametric_scheme.py -h
+wget https://raw.githubusercontent.com/makeyourownmaker/ParametricWeatherModel/master/parametricscheme.py
+python parametricscheme.py -h
 ```
 
 
@@ -76,10 +76,10 @@ There are two options for calculating the sensible heat flux:
 To use the experimental method the percent of net radiation must be set to 0:
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000 -de F
+python parametricscheme.py -la 47.6928 -lo -122.3038 -da 229 -gt 54 -st 72 -pr 0 -rh 1000 -de F
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0 --resistance 1000 --degrees F
+python parametricscheme.py --latitude 47.6928 --longitude -122.3038 --day_of_year 229 --ground_temp 54 --surface_temp 72 --percent_net_radiation 0 --resistance 1000 --degrees F
 ```
 
 Equation and page numbers in the python code refer to
@@ -207,7 +207,7 @@ The plots are in order from left to right and top to bottom:
 To recreate the results above start with the following command line parameters:
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038                \
+python parametricscheme.py -la 47.6928 -lo -122.3038                \
                             -da 229 -ho 13                           \
                             -gt 54 -st 72                            \
                             -uo -8 -pw 1.27                          \
@@ -222,7 +222,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -fn data/data.csv
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
+python parametricscheme.py --latitude 47.6928 --longitude -122.3038  \
                             --day_of_year 229 --hour 13               \
                             --ground_temp 54 --surface_temp 72        \
                             --utc_offset -8 --precip_water 1.27       \
@@ -277,7 +277,7 @@ specifies appending to the file in regular minute intervals.
 
 ```sh
 # Using short options
-python parametric_scheme.py -la 47.6928 -lo -122.3038                \
+python parametricscheme.py -la 47.6928 -lo -122.3038                \
                             -da 229 -ho 13                           \
                             -gt 54 -st 72                            \
                             -uo -8 -pw 1.27                          \
@@ -292,7 +292,7 @@ python parametric_scheme.py -la 47.6928 -lo -122.3038                \
                             -fn data/data.csv
 
 # The same using long options
-python parametric_scheme.py --latitude 47.6928 --longitude -122.3038  \
+python parametricscheme.py --latitude 47.6928 --longitude -122.3038  \
                             --day_of_year 229 --hour 13               \
                             --ground_temp 54 --surface_temp 72        \
                             --utc_offset -8 --precip_water 1.27       \
