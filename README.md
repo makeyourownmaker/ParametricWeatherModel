@@ -121,13 +121,25 @@ Included parameters:
 | Bowen ratio                        | -br   | --bowen_ratio         | Bowen ratio; -10 to 10                                              | 0.9                 |
 | Precipitable water                 | -pw   | --precip_water        | Precipitable water in cm; greater than 0                            | 1.0                 |
 | Resistance to heat flux            | -rh   | --resistance          | EXPERIMENTAL Resistance to heat flux (m s^-1)                       | 0                   |
-| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant                       | Surface temperature |
-| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment        | 0                   |
-| Atmospheric temperature constant   | -at   | --atmos_temp_constant | Air temperature at 40 hPa above the surface constant                | Surface temperature |
-| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment | 0                   |
 | File name                          | -fn   | --filename            | File name for comma separated value output                          | N/A                 |
 | Help                               | -h    | --help                | Show this help message and exit                                     | N/A                 |
 | Verbose                            | -v    | --verbose             | Print additional information                                        | N/A                 |
+
+  * Mutually exclusive optional group 1 parameters:
+    * Choose --cloud_temp_constant or --cloud_temp_adjust but not both
+
+| Name                               | Short | Long                  | Description                                                         | Default             |
+|------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
+| Cloud temperature constant         | -ct   | --cloud_temp_constant | Temperature of the base of the cloud constant                       | Surface temperature |
+| Cloud temperature adjustment       | -tc   | --cloud_temp_adjust   | EXPERIMENTAL Temperature of the base of the cloud adjustment        | 0                   |
+
+  * Mutually exclusive optional group 2 parameters:
+    * Choose --atmos_temp_constant or --atmos_temp_adjust but not both
+
+| Name                               | Short | Long                  | Description                                                         | Default             |
+|------------------------------------|-------|-----------------------|---------------------------------------------------------------------|---------------------|
+| Atmospheric temperature constant   | -at   | --atmos_temp_constant | Air temperature at 40 hPa above the surface constant                | Surface temperature |
+| Atmospheric temperature adjustment | -ta   | --atmos_temp_adjust   | EXPERIMENTAL Air temperature at 40 hPa above the surface adjustment | 0                   |
 
 Note:
  * The cloud fraction and cloud base temperature options are largely untested
