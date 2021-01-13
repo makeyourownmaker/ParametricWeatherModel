@@ -312,6 +312,9 @@ Make intermediate forecasts in data.csv file every 60 mins for 24 hours (1440 = 
 The notebooks directory contains the
 [plot_temperature_and_fluxes.ipynb](https://github.com/makeyourownmaker/ParametricWeatherModel/blob/master/notebooks/plot_temperature_and_fluxes.ipynb)
 notebook which will plot the data.csv file.
+In addition to [Jupyter](https://jupyter.org/) it requires the following packages:
+ * [pandas](https://pandas.pydata.org/)
+ * [matplotlib](https://matplotlib.org/)
 
 ### Limitations and assumptions
 
