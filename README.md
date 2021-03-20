@@ -9,14 +9,10 @@
 ParametricWeatherModel is a repository for forecasting surface temperature
 based primarily on latitude, longitude, day of year and hour of day.
 
+The weather modeling script is less than 200 lines of python plus argument
+parsing, output and error handling.  There are no external dependencies.
+
 If you like ParametricWeatherModel, give it a star, or fork it and contribute!
-
-
-## Development Stage
-
-The repository is slowly maturing.  It contains some
-limitations, hardcoded parameters and possibly errors.  Please file an
-issue if you find a problem.
 
 
 ## Usage
@@ -342,6 +338,13 @@ Alternatively, check notebook(s) remotely:
   * Temperature range checks start at -150 F and end at 150 F (-100 C and 66 C)
     * This wide range of input values may not be compatible with all the parameterization scheme assumptions
   * Will not work over water, snow ...
+
+
+## Development Stage
+
+The repository is slowly maturing.  It contains some
+limitations, hardcoded parameters and possibly errors.  Please file an
+issue if you find a problem.
 
 
 ## Roadmap
