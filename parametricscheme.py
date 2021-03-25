@@ -553,43 +553,43 @@ if __name__ == '__main__':
 
     optional = parser._action_groups.pop()
     optional.add_argument('-v',  '--verbose',
-            help='Print additional information',
+            help='Print additional information - default=%(default)s',
             default=True, action="store_false")
     optional.add_argument('-ho', '--hour',
-            help='Initial hour of day - default=12',
+            help='Initial hour of day - default=%(default)s',
             default=12, type=int, metavar="[0, 24]", choices=range(0, 25))
     optional.add_argument('-mi', '--minute',
-            help='Initial minute of hour - default=0',
+            help='Initial minute of hour - default=%(default)s',
             default=0, type=int, metavar="[0, 59]", choices=range(0, 60))
     optional.add_argument('-al', '--albedo',
-            help='Albedo - default=0.3',
+            help='Albedo - default=%(default)s',
             default=0.3, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-cf', '--cloud_fraction',
-            help='Cloud fraction - default=0',
+            help='Cloud fraction - default=%(default)s',
             default=0, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-ds', '--day_of_solstice',
-            help='Day of solstice - default=173',
+            help='Day of solstice - default=%(default)s',
             default=173, type=int, metavar="[172, 173]", choices=range(172, 174))
     optional.add_argument('-uo', '--utc_offset',
-            help='UTC offset in hours - default=0',
+            help='UTC offset in hours - default=%(default)s',
             default=0, type=int, metavar="[-12, 12]", choices=range(-12, 13))
     optional.add_argument('-rp', '--report_period',
-            help='Report period in minutes - default=60',
+            help='Report period in minutes - default=%(default)s',
             default=60, type=int_range(1, 61), metavar="[1, 60]")
     optional.add_argument('-fm', '--forecast_minutes',
-            help='Forecast period in minutes - default=1',
+            help='Forecast period in minutes - default=%(default)s',
             default=1, type=int_range(1, 1441), metavar="[1, 1440]")
     optional.add_argument('-tr', '--transmissivity',
-            help='Atmospheric transmissivity - default=0.8',
+            help='Atmospheric transmissivity - default=%(default)s',
             default=0.8, type=float_range(0.0, 1.0), metavar="[0.0, 1.0]")
     optional.add_argument('-em', '--emissivity',
-            help='Surface emissivity - default=0.9',
+            help='Surface emissivity - default=%(default)s',
             default=0.9, type=float_range(0.7, 0.99), metavar="[0.7, 0.99]")
     optional.add_argument('-pw', '--precip_water',
-            help='Precipitable water in cm - default=1',
+            help='Precipitable water in cm - default=%(default)s',
             default=1, type=float_range(0.0, 7.5), metavar="[0.0, 7.5]")
     optional.add_argument('-br', '--bowen_ratio',
-            help='Bowen ratio - default=0.9',
+            help='Bowen ratio - default=%(default)s',
             default=0.9, type=float_range(-10.0, 10.0), metavar="[-10.0, 10.0]")
     optional.add_argument('-fn', '--filename',
             help='File name for CSV output', type=str)
