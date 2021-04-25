@@ -14,6 +14,12 @@ parsing, output and error handling.  There are no external dependencies.
 
 If you like ParametricWeatherModel, give it a star, or fork it and contribute!
 
+Weather forecast for 47.6928 latitude, -122.3038 longitude, 229 day:
+
+ Temperature prediction    | Radiative processes
+:-------------------------:|:-------------------------:
+![](https://github.com/makeyourownmaker/ParametricWeatherModel/blob/master/figures/ParametricWeatherTemperature.01.png) |  ![](https://github.com/makeyourownmaker/ParametricWeatherModel/blob/master/figures/ParametricWeatherRadiativeProcesses.01.png)
+
 
 ## Usage
 
