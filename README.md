@@ -14,7 +14,7 @@ parsing, output and error handling.  There are no external dependencies.
 
 If you like ParametricWeatherModel, give it a star, or fork it and contribute!
 
-Weather forecast for 47.6928 latitude, -122.3038 longitude, 229 day:
+Weather forecast for latitude 47.6928, longitude -122.3038, day of year 229:
 
  Temperature prediction    | Radiative processes
 :-------------------------:|:-------------------------:
