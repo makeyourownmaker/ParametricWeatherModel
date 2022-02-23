@@ -364,6 +364,8 @@ issue if you find a problem.
       should be positive with high solar radiation (Q_S)
   * Find recent local weather examples for comparison
   * Find examples from the literature for comparison
+  * Compare current Euler integration with simple
+    [Runge-Kutta method](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods)
 
 * Expand documentation:
   * Justify values used in command line argument range checks
