@@ -107,7 +107,7 @@ Included parameters:
 | Percent net radiation | -pr   | --percent_net_radiation | Percent net radiation (0 to 1)             | N/A     |
 | Degrees               | -de   | --degrees               | Temperatures in Celsius or Fahrenheit      | N/A     |
 
-  * Optional parameters:
+  * Optional:
 
 | Name                    | Short | Long               | Description                                                     | Default |
 |-------------------------|-------|--------------------|-----------------------------------------------------------------|---------|
@@ -356,6 +356,8 @@ issue if you find a problem.
 
 ## Roadmap
 
+* Rename script and repository to ParameterizationScheme
+
 * Perform more sanity checks:
   * Sensible heat flux increases during morning reaching a maximum in the
     afternoon before decreasing to zero after sunset on cloudless summer days
@@ -371,7 +373,7 @@ issue if you find a problem.
   * Justify values used in command line argument range checks
 
 * Add unit tests:
-  * Setup travis CI or similar testing environment
+  * Setup GitHub Actions or similar testing environment
   * Find range of test cases where surface temperature and all parameters are known
     * Examples from the literature for each of the heat fluxes
       * Preferably observations
